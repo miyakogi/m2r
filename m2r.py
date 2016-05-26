@@ -6,21 +6,18 @@ import re
 import mistune
 
 
-class RestBlockLexer(mistune.BlockLexer):
-    def enable_directive(self):
-        """Parse directives.
-
-        Directives may consists of multiple lines, but the body should be rst
-        and should not be nested markdown.
-        """
-        self.rules.directive = re.compile(
+class RestBlockGrammar(mistune.BlockGrammar):
+    directive = re.compile(
             r'^\.\.\s+(.(?!\n\S))*',
             re.DOTALL | re.MULTILINE,
         )
-        self.default_rules.insert(0, 'directive')
+
+
+class RestBlockLexer(mistune.BlockLexer):
+    grammar_class = RestBlockGrammar
+    default_rules = ['directive'] + mistune.BlockLexer.default_rules
 
     def parse_directive(self, m):
-        print(m.group(0))
         self.tokens.append({
             'type': 'directive',
             'text': m.group(0),
@@ -28,16 +25,12 @@ class RestBlockLexer(mistune.BlockLexer):
 
 
 class RestInlineGrammar(mistune.InlineGrammar):
-    # code = re.compile(r'^(`+)\s*([\s\S]*?[^`])\s*\1(?![`_])')  # `code`
-    pass
+    rest_link = re.compile(r'`(.*?)`_')
 
 
 class RestInlineLexer(mistune.InlineLexer):
-    def enable_rest_link(self):
-        self.rules.rest_link = re.compile(
-            r'`(.*?)`_'
-        )
-        self.default_rules.insert(0, 'rest_link')
+    grammar_class = RestInlineGrammar
+    default_rules = ['rest_link'] + mistune.InlineLexer.default_rules
 
     def output_rest_link(self, m):
         text = m.group(1)
@@ -292,6 +285,11 @@ class RestRenderer(mistune.Renderer):
 
 
 class M2R(mistune.Markdown):
+    def __init__(self, renderer=None, inline=RestInlineLexer, block=RestBlockLexer, **kwargs):
+        if renderer is None:
+            renderer = RestRenderer(**kwargs)
+        super().__init__(renderer, inline=inline, block=block, **kwargs)
+
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
 
