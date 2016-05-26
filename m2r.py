@@ -6,6 +6,47 @@ import re
 import mistune
 
 
+class RestBlockLexer(mistune.BlockLexer):
+    def enable_directive(self):
+        """Parse directives.
+
+        Directives may consists of multiple lines, but the body should be rst
+        and should not be nested markdown.
+        """
+        self.rules.directive = re.compile(
+            r'^\.\.\s+(.(?!\n\S))*',
+            re.DOTALL | re.MULTILINE,
+        )
+        self.default_rules.insert(0, 'directive')
+
+    def parse_directive(self, m):
+        print(m.group(0))
+        self.tokens.append({
+            'type': 'directive',
+            'text': m.group(0),
+        })
+
+
+class RestInlineGrammar(mistune.InlineGrammar):
+    # code = re.compile(r'^(`+)\s*([\s\S]*?[^`])\s*\1(?![`_])')  # `code`
+    pass
+
+
+class RestInlineLexer(mistune.InlineLexer):
+    def enable_rest_link(self):
+        self.rules.rest_link = re.compile(
+            r'`(.*?)`_'
+        )
+        self.default_rules.insert(0, 'rest_link')
+
+    def output_rest_link(self, m):
+        text = m.group(1)
+        return self.renderer.rest_link(text)
+
+    def output_directive(self, m):
+        return self.renderer.directive(m.group(0))
+
+
 class RestRenderer(mistune.Renderer):
     list_indent_re = re.compile(r'^(\s*(#\.|\*)\s)')
     indent = ' ' * 3
@@ -185,6 +226,7 @@ class RestRenderer(mistune.Renderer):
         :param title: title text of the image.
         :param text: alt text of the image.
         """
+        # rst not support title option, and I couldn't find title attribute in HTML standard
         return '\n\n.. image:: {src}\n   :target: {src}\n   :alt: {text}\n\n'.format(**locals())
 
     def inline_html(self, html):
@@ -240,6 +282,18 @@ class RestRenderer(mistune.Renderer):
         raise NotImplementedError('sorry')
         html = '<div class="footnotes">\n%s<ol>%s</ol>\n</div>\n'
         return html % (self.hrule(), text)
+
+    """Below outputs are for rst."""
+    def rest_link(self, text):
+        return '`{}`_'.format(text)
+
+    def directive(self, text):
+        return '\n' + text + '\n'
+
+
+class M2R(mistune.Markdown):
+    def output_directive(self):
+        return self.renderer.directive(self.token['text'])
 
 
 if __name__ == '__main__':

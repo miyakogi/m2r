@@ -7,13 +7,17 @@ from docutils.core import Publisher
 from docutils import io
 from mistune import Markdown
 
-from m2r import RestRenderer
+from m2r import RestRenderer, RestInlineLexer, RestBlockLexer, M2R
 
 
 class RendererTestBase(TestCase):
     def setUp(self):
         self.renderer = RestRenderer()
-        self.md = Markdown(self.renderer)
+        self.blexer = RestBlockLexer()
+        self.blexer.enable_directive()
+        self.ilexer = RestInlineLexer(self.renderer)
+        self.ilexer.enable_rest_link()
+        self.md = M2R(self.renderer, inline=self.ilexer, block=self.blexer)
 
     def conv(self, src:str):
         out = self.md(src)
@@ -97,6 +101,10 @@ class TestInlineMarkdown(RendererTestBase):
         src = 'this is a [link](http://example.com/).'
         out = self.conv(src)
         self.assertEqual(out, '\nthis is a `link <http://example.com/>`_.\n')
+
+    def test_rest_link(self):
+        src = '`RefLink <http://example.com>`_'
+        out = self.conv(src)
 
 
 class TestBlockQuote(RendererTestBase):
@@ -420,3 +428,18 @@ print(1)
 end
 '''
         out = self.conv(src)
+
+
+class TestDirective(RendererTestBase):
+    def test_comment_oneline(self):
+        src = '.. a'
+        out = self.conv(src)
+        self.assertEqual(out, '\n.. a\n')
+
+    def test_comment_multiline(self):
+        comment = ('.. this is comment.\n   this is also comment.\n\n\n'
+               '    comment may include empty line.\n'
+               '\n\n')
+        src = comment + '`eoc`'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + comment + '``eoc``\n')
