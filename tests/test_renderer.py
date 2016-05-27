@@ -206,6 +206,15 @@ class TestCodeBlock(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n.. code-block::\n\n   pip install sphinx\n')
 
+    def test_code_block_math(self):
+        src = '\n'.join([
+            '```math',
+            'E = mc^2',
+            '```',
+        ])
+        out = self.conv(src)
+        self.assertEqual(out, '\n.. math::\n\n   E = mc^2\n')
+
     def test_plain_code_block_indent(self):
         src = '\n'.join([
             '```',

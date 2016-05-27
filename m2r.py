@@ -82,7 +82,9 @@ class RestRenderer(mistune.Renderer):
         return '\ :raw-md-html:`{}`\ '.format(html)
 
     def block_code(self, code, lang=None):
-        if lang:
+        if lang == 'math':
+            first_line = '\n.. math::\n\n'
+        elif lang:
             first_line = '\n.. code-block:: {}\n\n'.format(lang)
         elif _is_sphinx:
             first_line = '\n.. code-block:: guess\n\n'
