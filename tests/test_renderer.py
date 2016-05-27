@@ -12,12 +12,7 @@ from m2r import RestRenderer, RestInlineLexer, RestBlockLexer, M2R
 
 class RendererTestBase(TestCase):
     def setUp(self):
-        self.renderer = RestRenderer()
-        self.blexer = RestBlockLexer()
-        self.blexer.enable_directive()
-        self.ilexer = RestInlineLexer(self.renderer)
-        self.ilexer.enable_rest_link()
-        self.md = M2R(self.renderer, inline=self.ilexer, block=self.blexer)
+        self.md = M2R()
 
     def conv(self, src:str):
         out = self.md(src)
@@ -428,6 +423,41 @@ print(1)
 end
 '''
         out = self.conv(src)
+
+
+class TestTable(RendererTestBase):
+    def test_table(self):
+        src = '''h1 | h2 | h3\n--- | --- | ---\n1 | 2 | 3\n4 | 5 | 6'''
+        out = self.conv(src)
+        self.assertEqual(out, '\n'.join([
+            '',
+            '',
+            '.. raw:: html',
+            '',
+            '   <table>',
+            '   <thead>',
+            '   <tr>',
+            '   <th>h1</th>',
+            '   <th>h2</th>',
+            '   <th>h3</th>',
+            '   </tr>',
+            '   </thead>',
+            '   <tbody>',
+            '   <tr>',
+            '   <td>1</td>',
+            '   <td>2</td>',
+            '   <td>3</td>',
+            '   </tr>',
+            '   <tr>',
+            '   <td>4</td>',
+            '   <td>5</td>',
+            '   <td>6</td>',
+            '   </tr>',
+            '   </tbody>',
+            '   </table>',
+            '',
+            '',
+        ]))
 
 
 class TestDirective(RendererTestBase):

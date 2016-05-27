@@ -116,18 +116,15 @@ class RestRenderer(mistune.Renderer):
         :param header: header part of the table.
         :param body: body part of the table.
         """
-        raise NotImplementedError('sorry')
-        return (
-            '<table>\n<thead>%s</thead>\n'
-            '<tbody>\n%s</tbody>\n</table>\n'
-        ) % (header, body)
+        table = ('<table>\n<thead>\n{0}</thead>\n'
+                 '<tbody>\n{1}</tbody>\n</table>').format(header, body)
+        return '\n\n.. raw:: html\n\n' + self._indent_block(table) + '\n\n'
 
     def table_row(self, content):
         """Rendering a table row. Like ``<tr>``.
 
         :param content: content of current table row.
         """
-        raise NotImplementedError('sorry')
         return '<tr>\n%s</tr>\n' % content
 
     def table_cell(self, content, **flags):
@@ -137,7 +134,6 @@ class RestRenderer(mistune.Renderer):
         :param header: whether this is header or not.
         :param align: align of current table cell.
         """
-        raise NotImplementedError('sorry')
         if flags['header']:
             tag = 'th'
         else:
