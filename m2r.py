@@ -286,11 +286,3 @@ class M2R(mistune.Markdown):
 
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
-
-
-if __name__ == '__main__':
-    with open('./a.md') as f:
-        src = f.read()
-    renderer = RestRenderer()
-    markdown = mistune.Markdown(renderer)
-    print(markdown(src))
