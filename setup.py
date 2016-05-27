@@ -13,7 +13,7 @@ readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.rst')
 with open(readme_file) as readme_file:
     readme = readme_file.read()
 
-install_requires = ['mistune', 'docutils', 'pygments']
+install_requires = ['mistune', 'docutils', 'pygments', 'sphinx']
 
 setup(
     name='m2r',

@@ -317,7 +317,8 @@ class M2R(mistune.Markdown):
 class M2RParser(rst.Parser, Parser):
     def parse(self, inputstring, document):
         converter = M2R()
-        super(M2RParser, self).parse(converter(inputstring), document)
+        # super failes in python 2
+        rst.Parser.parse(self, converter(inputstring), document)
 
 
 def setup(app):
