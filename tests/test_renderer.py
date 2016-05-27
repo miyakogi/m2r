@@ -101,10 +101,50 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\nthis is a `link <http://example.com/>`_.\n')
 
-    def test_rest_link(self):
-        src = '`RefLink <http://example.com>`_'
+    def test_rest_role(self):
+        src = 'a :code:`some code` inline.'
         out = self.conv(src)
         self.assertEqual(out, '\n' + src + '\n')
+
+    def test_rest_link(self):
+        src = 'a `RefLink <http://example.com>`_ here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
+    def test_rest_link_and_role(self):
+        src = 'a :code:`a` and `RefLink <http://example.com>`_ here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
+    def test_rest_role_incomplete(self):
+        src = 'a co:`de` and `RefLink <http://example.com>`_ here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na co:``de`` and `RefLink <http://example.com>`_ here.\n')
+
+    def test_rest_role_incomplete2(self):
+        src = 'a `RefLink <http://example.com>`_ and co:`de` here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na `RefLink <http://example.com>`_ and co:``de`` here.\n')
+
+    def test_rest_role_with_code(self):
+        src = 'a `code` and :code:`rest` here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na ``code`` and :code:`rest` here.\n')
+
+    def test_code_with_rest_role(self):
+        src = 'a :code:`rest` and `code` here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na :code:`rest` and ``code`` here.\n')
+
+    def test_rest_link_with_code(self):
+        src = 'a `RefLink <a>`_ and `code` here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na `RefLink <a>`_ and ``code`` here.\n')
+
+    def test_code_with_rest_link(self):
+        src = 'a `code` and `RefLink <a>`_ here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na ``code`` and `RefLink <a>`_ here.\n')
 
     def test_inline_html(self):
         src = 'this is <s>html</s>.'
@@ -471,6 +511,32 @@ class TestTable(RendererTestBase):
             '   </tbody>',
             '   </table>',
             '',
+            '',
+        ]))
+
+
+class TestFootNote(RendererTestBase):
+    def test_footnote(self):
+        src = '\n'.join([
+            'This is a[^1] footnote[^2] ref[^ref] with rst [#a]_.',
+            '',
+            '[^1]: note 1',
+            '[^2]: note 2',
+            '[^ref]: note ref',
+            '.. rubric:: Footnotes\n\n.. [#a] note rst',
+        ])
+        out = self.conv(src)
+        self.assertEqual(out, '\n'.join([
+            '',
+            'This is a [#fn-1]_ footnote [#fn-2]_ ref [#fn-ref]_ with rst [#a]_.',
+            '',
+            '.. rubric:: Footnotes\n\n\n.. [#a] note rst',  # one empty line inserted...
+            '',
+            '.. rubric:: Footnotes',  # fottnotes inserted by mistune
+            '',
+            '.. [#fn-1] note 1',
+            '.. [#fn-2] note 2',
+            '.. [#fn-ref] note ref',
             '',
         ]))
 

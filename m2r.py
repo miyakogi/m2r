@@ -34,19 +34,23 @@ class RestBlockLexer(mistune.BlockLexer):
 
 
 class RestInlineGrammar(mistune.InlineGrammar):
-    rest_link = re.compile(r'`(.*?)`_')
+    rest_role = re.compile(r':.*?:`.*?`')
+    rest_link = re.compile(r'`[^`]*?`_')
+    # add colon as special text
+    text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~]|https?://| {2,}\n|$)')
 
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
-    default_rules = ['rest_link'] + mistune.InlineLexer.default_rules
+    default_rules = ['rest_role', 'rest_link'] + mistune.InlineLexer.default_rules
+
+    def output_rest_role(self, m):
+        """Pass through rest role."""
+        return self.renderer.rest_role(m.group(0))
 
     def output_rest_link(self, m):
-        text = m.group(1)
-        return self.renderer.rest_link(text)
-
-    def output_directive(self, m):
-        return self.renderer.directive(m.group(1))
+        """Pass through rest link."""
+        return self.renderer.rest_link(m.group(0))
 
 
 class RestRenderer(mistune.Renderer):
@@ -246,12 +250,7 @@ class RestRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param index: the index count of current footnote.
         """
-        raise NotImplementedError('sorry')
-        html = (
-            '<sup class="footnote-ref" id="fnref-%s">'
-            '<a href="#fn-%s" rel="footnote">%d</a></sup>'
-        ) % (escape(key), escape(key), index)
-        return html
+        return ' [#fn-{}]_'.format(key)
 
     def footnote_item(self, key, text):
         """Rendering a footnote item.
@@ -259,30 +258,21 @@ class RestRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param text: text content of the footnote.
         """
-        raise NotImplementedError('sorry')
-        back = (
-            '<a href="#fnref-%s" rev="footnote">&#8617;</a>'
-        ) % escape(key)
-        text = text.rstrip()
-        if text.endswith('</p>'):
-            text = re.sub(r'<\/p>$', r'%s</p>' % back, text)
-        else:
-            text = '%s<p>%s</p>' % (text, back)
-        html = '<li id="fn-%s">%s</li>\n' % (escape(key), text)
-        return html
+        return '.. [#fn-{0}] {1}\n'.format(key, text.strip())
 
     def footnotes(self, text):
         """Wrapper for all footnotes.
 
         :param text: contents of all footnotes.
         """
-        raise NotImplementedError('sorry')
-        html = '<div class="footnotes">\n%s<ol>%s</ol>\n</div>\n'
-        return html % (self.hrule(), text)
+        return '\n.. rubric:: Footnotes\n\n' + text
 
     """Below outputs are for rst."""
+    def rest_role(self, text):
+        return text
+
     def rest_link(self, text):
-        return '`{}`_'.format(text)
+        return text
 
     def directive(self, text):
         return '\n' + text + '\n'
