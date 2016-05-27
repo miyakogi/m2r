@@ -10,6 +10,7 @@ from sphinx.parsers import Parser
 import mistune
 
 
+_is_sphinx = False
 prolog = '''\
 .. role:: raw-md-html(raw)
    :format: html
@@ -18,7 +19,7 @@ prolog = '''\
 
 class RestBlockGrammar(mistune.BlockGrammar):
     directive = re.compile(
-            r'^(\.\.\s+.*)\n(?=\S)',
+            r'^(\.\.\s+.*?)\n(?=\S)',
             re.DOTALL | re.MULTILINE,
         )
 
@@ -73,11 +74,13 @@ class RestRenderer(mistune.Renderer):
 
     def _raw_html(self, html):
         self._include_raw_html = True
-        return ':raw-md-html:`{}`'.format(html)
+        return '\ :raw-md-html:`{}`\ '.format(html)
 
     def block_code(self, code, lang=None):
         if lang:
             first_line = '\n.. code-block:: {}\n\n'.format(lang)
+        elif _is_sphinx:
+            first_line = '\n.. code-block:: guess\n\n'
         else:
             first_line = '\n.. code-block::\n\n'
         return first_line + self._indent_block(code) + '\n'
@@ -169,21 +172,21 @@ class RestRenderer(mistune.Renderer):
 
         :param text: text content for emphasis.
         """
-        return '**{}**'.format(text)
+        return '\ **{}**\ '.format(text)
 
     def emphasis(self, text):
         """Rendering *emphasis* text.
 
         :param text: text content for emphasis.
         """
-        return '*{}*'.format(text)
+        return '\ *{}*\ '.format(text)
 
     def codespan(self, text):
         """Rendering inline `code` text.
 
         :param text: text content for inline code.
         """
-        return '``{}``'.format(text)
+        return '\ ``{}``\ '.format(text)
 
     def linebreak(self):
         """Rendering line break like ``<br>``."""
@@ -222,7 +225,7 @@ class RestRenderer(mistune.Renderer):
         """
         if title:
             raise NotImplementedError('sorry')
-        return '`{text} <{target}>`_'.format(target=link, text=text)
+        return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
 
     def image(self, src, title, text):
         """Rendering a image with title and text.
@@ -253,7 +256,7 @@ class RestRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param index: the index count of current footnote.
         """
-        return ' [#fn-{}]_'.format(key)
+        return '\ [#fn-{}]_\ '.format(key)
 
     def footnote_item(self, key, text):
         """Rendering a footnote item.
@@ -268,7 +271,10 @@ class RestRenderer(mistune.Renderer):
 
         :param text: contents of all footnotes.
         """
-        return '\n.. rubric:: Footnotes\n\n' + text
+        if text:
+            return '\n.. rubric:: Footnotes\n\n' + text
+        else:
+            return ''
 
     """Below outputs are for rst."""
     def rest_role(self, text):
@@ -278,6 +284,8 @@ class RestRenderer(mistune.Renderer):
         return text
 
     def directive(self, text):
+        if 'Foot' in text:
+            print(text)
         return '\n' + text + '\n'
 
 
@@ -306,6 +314,8 @@ class M2RParser(rst.Parser, Parser):
 
 def setup(app):
     """When used for spinx extension."""
+    global _is_sphinx
+    _is_sphinx = True
     app.add_source_parser('.md', M2RParser)
 
 
