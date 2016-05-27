@@ -540,6 +540,11 @@ class TestFootNote(RendererTestBase):
             '',
         ]))
 
+    def test_sphinx_ref(self):
+        src = 'This is a sphinx [ref]_ global ref.\n\n.. [ref] ref text'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
 
 class TestDirective(RendererTestBase):
     def test_comment_oneline(self):
