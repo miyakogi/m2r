@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from os import path
 import re
+from argparse import ArgumentParser, Namespace
 
+from docutils.parsers import rst
+from sphinx.parsers import Parser
 import mistune
 
 
 prolog = '''\
-.. m2r prolog
 .. role:: raw-md-html(raw)
    :format: html
-
-.. end of m2r prolog
 
 '''
 
@@ -54,6 +55,7 @@ class RestInlineLexer(mistune.InlineLexer):
 
 
 class RestRenderer(mistune.Renderer):
+    _include_raw_html = False
     list_indent_re = re.compile(r'^(\s*(#\.|\*)\s)')
     indent = ' ' * 3
     list_marker = '{#__rest_list_mark__#}'
@@ -70,6 +72,7 @@ class RestRenderer(mistune.Renderer):
         return '\n'.join(self.indent + line  if line else '' for line in block.splitlines())
 
     def _raw_html(self, html):
+        self._include_raw_html = True
         return ':raw-md-html:`{}`'.format(html)
 
     def block_code(self, code, lang=None):
@@ -284,5 +287,51 @@ class M2R(mistune.Markdown):
             renderer = RestRenderer(**kwargs)
         super(M2R, self).__init__(renderer, inline=inline, block=block, **kwargs)
 
+    def parse(self, text):
+        output = super(M2R, self).parse(text)
+        if self.renderer._include_raw_html:
+            return prolog + output
+        else:
+            return output
+
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
+
+
+class M2RParser(rst.Parser, Parser):
+    def parse(self, inputstring, document):
+        converter = M2R()
+        super(M2RParser, self).parse(converter(inputstring), document)
+
+
+def setup(app):
+    """When used for spinx extension."""
+    app.add_source_parser('.md', M2RParser)
+
+
+def parse_from_file(file):
+    if not path.exists(file):
+        raise OSError('No such file exists: {}'.format(file))
+    with open(file) as f:
+        src = f.read()
+    output = M2R()(src)
+    return output
+
+
+def main():
+    parser = ArgumentParser()
+    options = Namespace()
+    parser.add_argument('input_file', nargs='+')
+    parser.add_argument('--save', action='store_true', default=False)
+    parser.parse_known_args(namespace=options)
+    for file in options.input_file:
+        output = parse_from_file(file)
+        if options.save:
+            with open(path.splitext(file)[0] + '.rst', 'w') as f:
+                f.write(output)
+        else:
+            print(output)
+
+
+if __name__ == '__main__':
+    main()

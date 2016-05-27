@@ -31,7 +31,7 @@ class RendererTestBase(TestCase):
             settings_overrides={'output_encoding': 'unicode'},
             config_section=None,
         )
-        pub.set_source(prolog + rst, source_path=None)
+        pub.set_source(rst, source_path=None)
         pub.set_destination(destination=None, destination_path=None)
         output = pub.publish(enable_exit_status=False)
         self.assertLess(pub.document.reporter.max_level, 0)
@@ -149,7 +149,7 @@ class TestInlineMarkdown(RendererTestBase):
     def test_inline_html(self):
         src = 'this is <s>html</s>.'
         out = self.conv(src)
-        self.assertEqual(out, '\nthis is :raw-md-html:`<s>html</s>`.\n')
+        self.assertEqual(out, prolog + '\nthis is :raw-md-html:`<s>html</s>`.\n')
 
     def test_block_html(self):
         src = '<h1>title</h1>'
