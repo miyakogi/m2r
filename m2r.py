@@ -38,13 +38,14 @@ class RestBlockLexer(mistune.BlockLexer):
 class RestInlineGrammar(mistune.InlineGrammar):
     rest_role = re.compile(r':.*?:`.*?`')
     rest_link = re.compile(r'`[^`]*?`_')
+    inline_math = re.compile(r'`\$(.*)?\$`')
     # add colon as special text
     text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~]|https?://| {2,}\n|$)')
 
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
-    default_rules = ['rest_role', 'rest_link'] + mistune.InlineLexer.default_rules
+    default_rules = ['rest_role', 'rest_link', 'inline_math'] + mistune.InlineLexer.default_rules
 
     def output_rest_role(self, m):
         """Pass through rest role."""
@@ -53,6 +54,10 @@ class RestInlineLexer(mistune.InlineLexer):
     def output_rest_link(self, m):
         """Pass through rest link."""
         return self.renderer.rest_link(m.group(0))
+
+    def output_inline_math(self, m):
+        """Pass through rest link."""
+        return self.renderer.inline_math(m.group(1))
 
 
 class RestRenderer(mistune.Renderer):
@@ -115,7 +120,6 @@ class RestRenderer(mistune.Renderer):
         :param body: body contents of the list.
         :param ordered: whether this list is ordered or not.
         """
-        from pprint import pprint as pp
         mark = '#. ' if ordered else '* '
         lines = body.splitlines()
         for i, line in enumerate(lines):
@@ -283,9 +287,11 @@ class RestRenderer(mistune.Renderer):
     def rest_link(self, text):
         return text
 
+    def inline_math(self, math):
+        """Extension of recommonmark"""
+        return '\ :math:`{}`\ '.format(math)
+
     def directive(self, text):
-        if 'Foot' in text:
-            print(text)
         return '\n' + text + '\n'
 
 
