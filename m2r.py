@@ -282,7 +282,7 @@ class M2R(mistune.Markdown):
     def __init__(self, renderer=None, inline=RestInlineLexer, block=RestBlockLexer, **kwargs):
         if renderer is None:
             renderer = RestRenderer(**kwargs)
-        super().__init__(renderer, inline=inline, block=block, **kwargs)
+        super(M2R, self).__init__(renderer, inline=inline, block=block, **kwargs)
 
     def output_directive(self):
         return self.renderer.directive(self.token['text'])

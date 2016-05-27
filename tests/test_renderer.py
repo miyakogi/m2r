@@ -14,7 +14,7 @@ class RendererTestBase(TestCase):
     def setUp(self):
         self.md = M2R()
 
-    def conv(self, src:str):
+    def conv(self, src):
         out = self.md(src)
         self.check_rst(out)
         return out
