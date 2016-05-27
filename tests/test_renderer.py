@@ -7,7 +7,7 @@ from docutils.core import Publisher
 from docutils import io
 from mistune import Markdown
 
-from m2r import RestRenderer, RestInlineLexer, RestBlockLexer, M2R
+from m2r import prolog, RestRenderer, RestInlineLexer, RestBlockLexer, M2R
 
 
 class RendererTestBase(TestCase):
@@ -31,7 +31,7 @@ class RendererTestBase(TestCase):
             settings_overrides={'output_encoding': 'unicode'},
             config_section=None,
         )
-        pub.set_source(rst, source_path=None)
+        pub.set_source(prolog + rst, source_path=None)
         pub.set_destination(destination=None, destination_path=None)
         output = pub.publish(enable_exit_status=False)
         self.assertLess(pub.document.reporter.max_level, 0)
@@ -77,6 +77,10 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out.replace('\n', ''), '``a``')
 
+    def test_strikethrough(self):
+        src = ('~~a~~')
+        out = self.conv(src)
+
     def test_emphasis(self):
         src = '*a*'
         out = self.conv(src)
@@ -100,6 +104,17 @@ class TestInlineMarkdown(RendererTestBase):
     def test_rest_link(self):
         src = '`RefLink <http://example.com>`_'
         out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
+    def test_inline_html(self):
+        src = 'this is <s>html</s>.'
+        out = self.conv(src)
+        self.assertEqual(out, '\nthis is :raw-md-html:`<s>html</s>`.\n')
+
+    def test_block_html(self):
+        src = '<h1>title</h1>'
+        out = self.conv(src)
+        self.assertEqual(out, '\n\n.. raw:: html\n\n   <h1>title</h1>\n\n')
 
 
 class TestBlockQuote(RendererTestBase):
@@ -466,10 +481,15 @@ class TestDirective(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n.. a\n')
 
+    def test_comment_newline(self):
+        src = '..\n\n   comment\nnewline'
+        out = self.conv(src)
+        self.assertEqual(out, '\n..\n\n   comment\n\nnewline\n')
+
     def test_comment_multiline(self):
         comment = ('.. this is comment.\n   this is also comment.\n\n\n'
                '    comment may include empty line.\n'
                '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + comment + '``eoc``\n')
+        self.assertEqual(out, '\n' + comment + '\n``eoc``\n')

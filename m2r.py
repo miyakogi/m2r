@@ -6,9 +6,18 @@ import re
 import mistune
 
 
+prolog = '''\
+.. m2r prolog
+.. role:: raw-md-html(raw)
+   :format: html
+
+.. end of m2r prolog
+
+'''
+
 class RestBlockGrammar(mistune.BlockGrammar):
     directive = re.compile(
-            r'^\.\.\s+(.(?!\n\S))*',
+            r'^(\.\.\s+.*)\n(?=\S)',
             re.DOTALL | re.MULTILINE,
         )
 
@@ -20,7 +29,7 @@ class RestBlockLexer(mistune.BlockLexer):
     def parse_directive(self, m):
         self.tokens.append({
             'type': 'directive',
-            'text': m.group(0),
+            'text': m.group(1),
         })
 
 
@@ -37,7 +46,7 @@ class RestInlineLexer(mistune.InlineLexer):
         return self.renderer.rest_link(text)
 
     def output_directive(self, m):
-        return self.renderer.directive(m.group(0))
+        return self.renderer.directive(m.group(1))
 
 
 class RestRenderer(mistune.Renderer):
@@ -56,6 +65,9 @@ class RestRenderer(mistune.Renderer):
     def _indent_block(self, block):
         return '\n'.join(self.indent + line  if line else '' for line in block.splitlines())
 
+    def _raw_html(self, html):
+        return ':raw-md-html:`{}`'.format(html)
+
     def block_code(self, code, lang=None):
         if lang:
             first_line = '\n.. code-block:: {}\n\n'.format(lang)
@@ -72,7 +84,7 @@ class RestRenderer(mistune.Renderer):
 
         :param html: text content of the html snippet.
         """
-        return '\n\n.. raw:: html\n\n' + self._indent_block(html)
+        return '\n\n.. raw:: html\n\n' + self._indent_block(html) + '\n\n'
 
     def header(self, text, level, raw=None):
         """Rendering header/heading tags like ``<h1>`` ``<h2>``.
@@ -168,19 +180,16 @@ class RestRenderer(mistune.Renderer):
 
     def linebreak(self):
         """Rendering line break like ``<br>``."""
-        raise NotImplementedError('sorry')
         if self.options.get('use_xhtml'):
-            return '<br />\n'
-        return '<br>\n'
+            return self._raw_html('<br />') + '\n'
+        return self._raw_html('<br>') + '\n'
 
     def strikethrough(self, text):
         """Rendering ~~strikethrough~~ text.
 
         :param text: text content for strikethrough.
         """
-        # not supported in rst. may be need :raw-html:`<del>%s</del>
-        raise NotImplementedError('sorry')
-        return '<del>%s</del>' % text
+        return self._raw_html('<del>{}</del>'.format(text))
 
     def text(self, text):
         """Rendering unformatted text.
@@ -223,10 +232,9 @@ class RestRenderer(mistune.Renderer):
 
         :param html: text content of the html snippet.
         """
-        raise NotImplementedError('sorry')
         if self.options.get('escape'):
-            return escape(html)
-        return html
+            html = escape(html)
+        return self._raw_html(html)
 
     def newline(self):
         """Rendering newline element."""
