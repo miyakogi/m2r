@@ -94,7 +94,7 @@ class RestRenderer(mistune.Renderer):
 
     def block_quote(self, text):
         # text includes some empty line
-        return '\n\n{}\n\n'.format(self._indent_block(text.strip('\n')))
+        return '\n..\n\n{}\n\n'.format(self._indent_block(text.strip('\n')))
 
     def block_html(self, html):
         """Rendering block level pure html content.

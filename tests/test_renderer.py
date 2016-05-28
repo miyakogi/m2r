@@ -171,19 +171,19 @@ class TestBlockQuote(RendererTestBase):
     def test_block_quote(self):
         src = '> q1\n> q2'
         out = self.conv(src)
-        self.assertEqual(out, '\n\n   q1\n   q2\n\n')
+        self.assertEqual(out, '\n..\n\n   q1\n   q2\n\n')
 
     def test_block_quote_nested(self):
         src = '> q1\n> > q2'
         out = self.conv(src)
         # one extra empty line is inserted, but still valid rst anyway
-        self.assertEqual(out, '\n\n   q1\n\n\n      q2\n\n')
+        self.assertEqual(out, '\n..\n\n   q1\n\n   ..\n\n      q2\n\n')
 
     @skip('markdown does not support dedent in block quote')
     def test_block_quote_nested_2(self):
         src = '> q1\n> > q2\n> q3'
         out = self.conv(src)
-        self.assertEqual(out, '\n\n   q1\n\n      q2\n\n   q3\n\n')
+        self.assertEqual(out, '\n..\n\n   q1\n\n   ..\n      q2\n\n   q3\n\n')
 
 
 
