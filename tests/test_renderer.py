@@ -542,16 +542,15 @@ class TestFootNote(RendererTestBase):
             '[^1]: note 1',
             '[^2]: note 2',
             '[^ref]: note ref',
-            '.. rubric:: Footnotes\n\n.. [#a] note rst',
+            '.. [#a] note rst',
         ])
         out = self.conv(src)
         self.assertEqual(out, '\n'.join([
             '',
             'This is a\ [#fn-1]_\  footnote\ [#fn-2]_\  ref\ [#fn-ref]_\  with rst [#a]_.',
             '',
-            '.. rubric:: Footnotes\n\n\n.. [#a] note rst',  # one empty line inserted...
+            '.. [#a] note rst',  # one empty line inserted...
             '',
-            '.. rubric:: Footnotes',  # fottnotes inserted by mistune
             '',
             '.. [#fn-1] note 1',
             '.. [#fn-2] note 2',

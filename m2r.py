@@ -278,7 +278,7 @@ class RestRenderer(mistune.Renderer):
         :param text: contents of all footnotes.
         """
         if text:
-            return '\n.. rubric:: Footnotes\n\n' + text
+            return '\n\n' + text
         else:
             return ''
 
