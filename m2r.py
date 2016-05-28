@@ -328,6 +328,13 @@ def setup(app):
     app.add_source_parser('.md', M2RParser)
 
 
+# for command-line use
+parser = ArgumentParser()
+options = Namespace()
+parser.add_argument('input_file', nargs='+')
+parser.add_argument('--save', action='store_true', default=False)
+
+
 def parse_from_file(file):
     if not path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
@@ -337,17 +344,17 @@ def parse_from_file(file):
     return output
 
 
+def save_to_file(file, src):
+    with open(path.splitext(file)[0] + '.rst', 'w') as f:
+        f.write(src)
+
+
 def main():
-    parser = ArgumentParser()
-    options = Namespace()
-    parser.add_argument('input_file', nargs='+')
-    parser.add_argument('--save', action='store_true', default=False)
     parser.parse_known_args(namespace=options)
     for file in options.input_file:
         output = parse_from_file(file)
         if options.save:
-            with open(path.splitext(file)[0] + '.rst', 'w') as f:
-                f.write(output)
+            save_to_file(file, output)
         else:
             print(output)
 
