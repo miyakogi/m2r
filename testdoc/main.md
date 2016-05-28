@@ -7,13 +7,13 @@ A **strong**, *emphasis*, ~~deleted~~, `code with single-backtick`,
 
 ### Link
 
-Auto link to http://example.com/ inline.
+Auto link to http://example.com/.
 
-Link to [example.com](http://example.com/) with md.
+Link to [example.com](http://example.com/) in markdown.
 
-Link to `example.com <http://example.com/>`_ with rest.
+Link to `example.com <http://example.com/>`_ in rest.
 
-Link to `example`_ with rest_ref.
+Link to `example`_ in rest_ref.
 
 .. _example: http://example.com
 
@@ -27,16 +27,17 @@ This is a simple sentence.
 | (rest)
 
 Sentence with  
-hard-wrap (md)
+hard-wrap (markdown)
 
 > block quote
-> second quote
+> second line
 > > nested quote
 
 ---
 
 <div style="color: red;">This is a red, raw-html block.</div>
 
+> Block quote after raw-html directive
 
 ### List
 
@@ -90,7 +91,7 @@ Rest Style code block.
 
 ## Extensions
 
-### Table (md)
+### Table (markdown)
 
 | table header 1 | table header 2 | table header 3 |
 |:-------|:------:|-------:|
@@ -114,13 +115,11 @@ The below is math-block (rest).
 
 ### Foot note
 
-Footnote[^1] and footnote[^key] with md.
+Footnote[^1] and footnote[^key] with markdown.
 
 Footnote with rest\ [#a]_.
 
 [^1]: footnote 1
 [^key]: footnote key
-
-.. rubric:: Footnote by rest
 
 .. [#a] rest footnote
