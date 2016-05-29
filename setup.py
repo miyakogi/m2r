@@ -9,11 +9,18 @@ try:
 except ImportError:
     from distutils.core import setup
 
-readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.rst')
-with open(readme_file) as readme_file:
-    readme = readme_file.read()
+try:
+    from m2r import parse_from_file
+except ImportError:
+    def parse_from_file(file):
+        with open(file) as f:
+            content = f.read()
+        return content
 
-install_requires = ['mistune', 'docutils', 'pygments', 'sphinx']
+readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.md')
+readme = parse_from_file(readme_file)
+
+install_requires = ['mistune', 'docutils', 'sphinx']
 
 setup(
     name='m2r',
