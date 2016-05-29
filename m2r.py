@@ -37,6 +37,9 @@ class RestBlockLexer(mistune.BlockLexer):
 
 
 class RestInlineGrammar(mistune.InlineGrammar):
+    image_link = re.compile(
+        r'\[!\[(?P<alt>.*?)\]\((?P<url>.*?)\).*\]\((?P<target>.*?)\)'
+    )
     rest_role = re.compile(r':.*?:`.*?`')
     rest_link = re.compile(r'`[^`]*?`_')
     inline_math = re.compile(r'`\$(.*)?\$`')
@@ -46,7 +49,12 @@ class RestInlineGrammar(mistune.InlineGrammar):
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
-    default_rules = ['rest_role', 'rest_link', 'inline_math'] + mistune.InlineLexer.default_rules
+    default_rules = ['image_link', 'rest_role', 'rest_link', 'inline_math'] + mistune.InlineLexer.default_rules
+
+    def output_image_link(self, m):
+        """Pass through rest role."""
+        return self.renderer.image_link(
+            m.group('url'), m.group('target'), m.group('alt'))
 
     def output_rest_role(self, m):
         """Pass through rest role."""
@@ -284,6 +292,9 @@ class RestRenderer(mistune.Renderer):
             return ''
 
     """Below outputs are for rst."""
+    def image_link(self, url, target, alt):
+        return '\n.. image:: {url}\n   :target: {target}\n   :alt: {alt}'.format(**locals())
+
     def rest_role(self, text):
         return text
 

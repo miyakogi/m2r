@@ -106,6 +106,11 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\nthis is a \ `link <http://example.com/>`_\ .\n')
 
+    def test_image_link(self):
+        src = '[![Alt Text](image_taget_url)](link_target_url)'
+        out = self.conv(src)
+        self.assertEqual(out, '\n\n.. image:: image_taget_url\n   :target: link_target_url\n   :alt: Alt Text\n')
+
     def test_rest_role(self):
         src = 'a :code:`some code` inline.'
         out = self.conv(src)
