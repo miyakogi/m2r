@@ -1,40 +1,72 @@
 M2R
 ===
 
-.. image:: https://img.shields.io/pypi/v/m2r.svg
-   :target: https://pypi.python.org/pypi/m2r
+[![PyPI](https://img.shields.io/pypi/v/m2r.svg)](https://pypi.python.org/pypi/m2r)
 
-.. image:: https://img.shields.io/pypi/pyversions/m2r.svg
-   :target: https://pypi.python.org/pypi/m2r
+[![PyPI version](https://img.shields.io/pypi/pyversions/m2r.svg)](https://pypi.python.org/pypi/m2r)
 
-.. image:: https://readthedocs.org/projects/m2r/badge/?version=latest
-   :target: http://m2r.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
+[![Documentation Status](https://readthedocs.org/projects/m2r/badge/?version=latest)](http://m2r.readthedocs.io/en/latest/?badge=latest)
 
-.. image:: https://travis-ci.org/miyakogi/m2r.svg
-   :target: https://travis-ci.org/miyakogi/m2r
+[![Build Status](https://travis-ci.org/miyakogi/m2r.svg?branch=master)](https://travis-ci.org/miyakogi/m2r)
 
-.. image:: https://codecov.io/github/miyakogi/m2r/coverage.svg
-   :target: https://codecov.io/github/miyakogi/m2r
+[![codecov](https://codecov.io/gh/miyakogi/m2r/branch/master/graph/badge.svg)](https://codecov.io/gh/miyakogi/m2r)
 
 --------------------------------------------------------------------------------
 
-Markdown to restructuredtext converter.
+Markdown with reStructuredText (rest) extensions.
 
-Features
---------
+## Features
 
-Markdown with restructured text extensions.
+Write markdown and rest in a single file.
 
-* Basic and extended markdown markups
+* Basic markdown and some extensions (below)
+    * inline/block embedded html
+    * fenced-code block
+    * tables
+    * footnotes
+* Inline- and Block-level rest markups
+    * single- and multi-line directives (e.g. `.. directive::`)
+    * inline-roles (e.g. ``:code:`print(1)` ...``)
+    * ref-link (e.g. ``see `ref`_``)
+    * footnotes (e.g. ``[#fn]_``)
+    * math extension inspired by `recommonmark <https://recommonmark.readthedocs.io/en/latest/index.html>`_
+* Sphinx support
+    * add ``.. mdinclude:: filename.md`` directive to include markdown from markdown or rst
 
-  * Inline/block embedded html
-  * fenced-code block, table, and footnote extensions are available
+## Installation
 
-* Inline/Block-level rest markups in markdown
+```
+pip install m2r
+```
 
-  * directive (e.g. ``.. directive:: ...``)
-  * ref-link (e.g. ```Ref`_``)
-  * inline-roles (e.g. ``:math:`E = mc^2```)
+## Usage
 
-* Out-of-box sphinx integration
+### Sphinx
+
+In conf.py
+
+```python
+extensions = [
+    ...,
+    'm2r',
+]
+
+# source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+```
+
+Then write index.md or index.rst, and run `make html`.
+
+#### mdinclude directive
+
+Like `.. include:: file` directive, `.. mdinclude:: file` directive inserts markdown file at the line.
+
+Note: do not use `.. include:: file` directive to include markdown file, use `.. mdinclude:: file` instead.
+
+## Example
+
+See [example in document]().
+
+## Licence
+
+MIT

@@ -1,13 +1,12 @@
-.. include:: ../README.rst
+.. mdinclude:: ../README.md
 
 Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   ../testdoc/main
-
+    example
 
 Indices and tables
 ==================
