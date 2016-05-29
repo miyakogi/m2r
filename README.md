@@ -13,25 +13,25 @@ M2R
 
 --------------------------------------------------------------------------------
 
-Markdown with reStructuredText (rest) extensions.
+Markdown with reStructuredText (reST) extensions.
 
 ## Features
 
-Write markdown and rest in a single file.
+Write markdown and reST in a single file.
 
 * Basic markdown and some extensions (below)
     * inline/block embedded html
     * fenced-code block
     * tables
     * footnotes
-* Inline- and Block-level rest markups
+* Inline- and Block-level reST markups
     * single- and multi-line directives (e.g. `.. directive::`)
     * inline-roles (e.g. ``:code:`print(1)` ...``)
     * ref-link (e.g. ``see `ref`_``)
     * footnotes (e.g. ``[#fn]_``)
     * math extension inspired by `recommonmark <https://recommonmark.readthedocs.io/en/latest/index.html>`_
 * Sphinx support
-    * add ``.. mdinclude:: filename.md`` directive to include markdown from markdown or rst
+    * ``mdinclude`` directive to include markdown from md or reST
 
 ## Installation
 
@@ -65,7 +65,7 @@ Note: do not use `.. include:: file` directive to include markdown file, use `..
 
 ## Example
 
-See [example in document]().
+See [example in document](https://miyakogi.github.io/m2r/example.html).
 
 ## Licence
 

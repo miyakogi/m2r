@@ -1,4 +1,7 @@
-# Markdown Extension Test
+# Example
+
+This page is written in mixed markdown and reST.
+Source code is [here](https://github.com/miyakogi/m2r/blob/master/docs/example.md).
 
 ## Basic Markups (inline)
 
@@ -24,10 +27,10 @@ This is a simple sentence.
 
 | sentence with
 | newlines
-| (rest)
+| (reST)
 
 Sentence with  
-hard-wrap (markdown)
+hard-wrap (markdown, trailing two spaces)
 
 > block quote
 > second line
@@ -60,13 +63,13 @@ hard-wrap (markdown)
 1. ordered list
    in new line
 2. second item
-   * nested unordered list
-   * second item
-     with new line
+  * nested unordered list
+  * second item
+    with new line
 3. original depth
-   1. nested ordered list
-      with new line
-   2. again
+  1. nested ordered list
+     with new line
+  2. again
 4. original depth again
 
 ### Code Block
@@ -75,7 +78,7 @@ Simple, indented code block
 
     pip install sphinx
 
-Code block with triple back-tick.
+Code block with triple backticks.
 
 ```python
 def a(n: int) -> None:
@@ -83,7 +86,7 @@ def a(n: int) -> None:
         print(i)
 ```
 
-Rest Style code block.
+Rest style code block.
 
 .. code-block:: python
 
@@ -93,9 +96,9 @@ Rest Style code block.
 
 ### Table (markdown)
 
-| table header 1 | table header 2 | table header 3 |
-|:-------|:------:|-------:|
-| cell 1 (l) | cell 2 (c) | cell 3 (r) |
+| Table Header 1 | Table Header 2 | Table Header 3 |
+|:---------------|:--------------:|---------------:|
+| left           | center         | right          |
 
 ### Math
 
@@ -113,7 +116,7 @@ The below is math-block (rest).
 
    E = mc^2
 
-### Foot note
+### Footnote
 
 Footnote[^1] and footnote[^key] with markdown.
 
