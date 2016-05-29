@@ -22,4 +22,4 @@ script:
   - coverage report --include="*m2r.py,*m2r/tests*"
   - cp -f .coverage ../
 after_success:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then codecov -b $TRAVIS_BRANCH && coveralls; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then codecov && coveralls; fi
