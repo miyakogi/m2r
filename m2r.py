@@ -13,7 +13,7 @@ import mistune
 
 _is_sphinx = False
 prolog = '''\
-.. role:: raw-md-html(raw)
+.. role:: raw-html-m2r(raw)
    :format: html
 
 '''
@@ -88,7 +88,7 @@ class RestRenderer(mistune.Renderer):
 
     def _raw_html(self, html):
         self._include_raw_html = True
-        return '\ :raw-md-html:`{}`\ '.format(html)
+        return '\ :raw-html-m2r:`{}`\ '.format(html)
 
     def block_code(self, code, lang=None):
         if lang == 'math':

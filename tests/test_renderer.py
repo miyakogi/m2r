@@ -73,7 +73,7 @@ class TestBasic(RendererTestBase):
     def test_linebreak(self):
         src = 'abc def  \nghi'
         out = self.conv(src)
-        self.assertEqual(out, prolog + '\nabc def\ :raw-md-html:`<br>`\ \nghi' + '\n')
+        self.assertEqual(out, prolog + '\nabc def\ :raw-html-m2r:`<br>`\ \nghi' + '\n')
 
 
 class TestInlineMarkdown(RendererTestBase):
@@ -164,7 +164,7 @@ class TestInlineMarkdown(RendererTestBase):
     def test_inline_html(self):
         src = 'this is <s>html</s>.'
         out = self.conv(src)
-        self.assertEqual(out, prolog + '\nthis is \ :raw-md-html:`<s>html</s>`\ .\n')
+        self.assertEqual(out, prolog + '\nthis is \ :raw-html-m2r:`<s>html</s>`\ .\n')
 
     def test_block_html(self):
         src = '<h1>title</h1>'
