@@ -6,12 +6,10 @@
 M2R's Test Documentation!
 =========================
 
-Contents:
+## Test Document
 
-.. toctree::
-   :maxdepth: 2
 
-   main
+.. mdinclude:: ../docs/example.md
 
 
 

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from os import path
+import os
 import re
 from argparse import ArgumentParser, Namespace
 
+from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
 from sphinx.parsers import Parser
 import mistune
@@ -314,11 +315,73 @@ class M2R(mistune.Markdown):
         return self.renderer.directive(self.token['text'])
 
 
+
 class M2RParser(rst.Parser, Parser):
     def parse(self, inputstring, document):
         converter = M2R()
-        # super failes in python 2
+        # super failes in python 2 since rst.Parser is not inheritting object
         rst.Parser.parse(self, converter(inputstring), document)
+
+
+class MdInclude(rst.Directive):
+    """Directive class to include markdown in sphinx.
+
+    Load a file and convert it to rst and insert as a node. Currentlly
+    directive-specific options are not implemented.
+    """
+    required_arguments = 1
+    optional_arguments = 0
+
+    def run(self):
+        """Most of this method is from ``docutils.parser.rst.Directive``.
+
+        docutils version: 0.12
+        """
+        if not self.state.document.settings.file_insertion_enabled:
+            raise self.warning('"%s" directive disabled.' % self.name)
+        source = self.state_machine.input_lines.source(
+            self.lineno - self.state_machine.input_offset - 1)
+        source_dir = os.path.dirname(os.path.abspath(source))
+        path = rst.directives.path(self.arguments[0])
+        path = os.path.normpath(os.path.join(source_dir, path))
+        path = utils.relative_path(None, path)
+        path = nodes.reprunicode(path)
+
+        # get options (currently not use directive-specific options)
+        encoding = self.options.get(
+            'encoding', self.state.document.settings.input_encoding)
+        e_handler=self.state.document.settings.input_encoding_error_handler
+        tab_width = self.options.get(
+            'tab-width', self.state.document.settings.tab_width)
+
+        # open the inclding file
+        try:
+            self.state.document.settings.record_dependencies.add(path)
+            include_file = io.FileInput(source_path=path,
+                                        encoding=encoding,
+                                        error_handler=e_handler)
+        except UnicodeEncodeError as error:
+            raise self.severe('Problems with "%s" directive path:\n'
+                              'Cannot encode input file path "%s" '
+                              '(wrong locale?).' %
+                              (self.name, SafeString(path)))
+        except IOError as error:
+            raise self.severe('Problems with "%s" directive path:\n%s.' %
+                      (self.name, ErrorString(error)))
+
+        # read from the file
+        try:
+            rawtext = include_file.read()
+        except UnicodeError as error:
+            raise self.severe('Problem with "%s" directive:\n%s' %
+                              (self.name, ErrorString(error)))
+
+        converter = M2R()
+        include_lines = statemachine.string2lines(converter(rawtext),
+                                                  tab_width,
+                                                  convert_whitespace=True)
+        self.state_machine.insert_input(include_lines, path)
+        return []
 
 
 def setup(app):
@@ -326,6 +389,7 @@ def setup(app):
     global _is_sphinx
     _is_sphinx = True
     app.add_source_parser('.md', M2RParser)
+    app.add_directive('mdinclude', MdInclude)
 
 
 # for command-line use
@@ -336,7 +400,7 @@ parser.add_argument('--save', action='store_true', default=False)
 
 
 def parse_from_file(file):
-    if not path.exists(file):
+    if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
     with open(file) as f:
         src = f.read()
@@ -345,7 +409,7 @@ def parse_from_file(file):
 
 
 def save_to_file(file, src):
-    with open(path.splitext(file)[0] + '.rst', 'w') as f:
+    with open(os.path.splitext(file)[0] + '.rst', 'w') as f:
         f.write(src)
 
 
