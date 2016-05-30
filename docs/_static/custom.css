@@ -22,6 +22,10 @@ pre, .pre {
   font-size: 1em;
 }
 
+code {
+  border-style: none;
+}
+
 .search-btn {
   padding: 0 1em;
   font-family: Lato, sans-serif;

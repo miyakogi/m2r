@@ -5,35 +5,43 @@ M2R
 
 [![PyPI version](https://img.shields.io/pypi/pyversions/m2r.svg)](https://pypi.python.org/pypi/m2r)
 
-[![Documentation Status](https://readthedocs.org/projects/m2r/badge/?version=latest)](http://m2r.readthedocs.io/en/latest/?badge=latest)
-
 [![Build Status](https://travis-ci.org/miyakogi/m2r.svg?branch=master)](https://travis-ci.org/miyakogi/m2r)
 
 [![codecov](https://codecov.io/gh/miyakogi/m2r/branch/master/graph/badge.svg)](https://codecov.io/gh/miyakogi/m2r)
 
 --------------------------------------------------------------------------------
 
-Markdown with reStructuredText (reST) extensions.
+M2R converts a markdown file including reST markups to a valid reST format.
 
-M2R converts a markdown including reST markups to a valid reST format.
+## Why another converter?
+
+I wanted to write sphinx document in markdown, since it's widely used now and
+easy to write code blocks and lists. However, converters using pandoc or
+recommonmark do not support many reST markups and sphinx extensions. For
+example, reST's reference link like ``see `ref`_`` (this is very convenient in
+long document in which same link appears multiple times) will be converted to
+a code block in HTML like `see <code>ref</code>_`, which is not expected.
 
 ## Features
 
-* Basic markdown and some extensions (below)
-    * inline/block embedded html
+* Basic markdown and some extensions (see below)
+    * inline/block-level raw html
     * fenced-code block
     * tables
-    * footnotes
+    * footnotes (``[^1]``)
 * Inline- and Block-level reST markups
-    * single- and multi-line directives (e.g. `.. directive::`)
-    * inline-roles (e.g. ``:code:`print(1)` ...``)
-    * ref-link (e.g. ``see `ref`_``)
-    * footnotes (e.g. ``[#fn]_``)
-    * math extension inspired by `recommonmark <https://recommonmark.readthedocs.io/en/latest/index.html>`_
-* Sphinx support
-    * ``mdinclude`` directive to include markdown from md or reST
+    * single- and multi-line directives (`.. directive::`)
+    * inline-roles (``:code:`print(1)` ...``)
+    * ref-link (``see `ref`_``)
+    * footnotes (``[#fn]_``)
+    * math extension inspired by [recommonmark](https://recommonmark.readthedocs.io/en/latest/index.html)
+* Sphinx extension
+    * add markdown support for sphinx
+    * ``mdinclude`` directive to include markdown from md or reST files
 
 ## Installation
+
+Python 2.7 or Python 3.3+ is required.
 
 ```
 pip install m2r
@@ -41,9 +49,19 @@ pip install m2r
 
 ## Usage
 
-### Sphinx
+### Command Line
 
-In conf.py
+`m2r` command converts markdown file to reST format.
+
+```
+m2r your_document.md [your_document2.md ...]
+```
+
+Then you will find `your_document.rst` in the same directory.
+
+### Sphinx Integration
+
+In your conf.py, add the following lines.
 
 ```python
 extensions = [
@@ -57,21 +75,41 @@ source_suffix = ['.rst', '.md']
 
 Write index.md and run `make html`.
 
+When `m2r` extension is enabled on sphinx and `.md` file is loaded, m2r
+converts to reST and pass to sphinx, not making new `.rst` file.
+
 #### mdinclude directive
 
-Like `.. include:: file` directive, `.. mdinclude:: file` directive inserts markdown file at the line.
+Like `.. include:: file` directive, `.. mdinclude:: file` directive inserts
+markdown file at the line.
 
-Note: do not use `.. include:: file` directive to include markdown file, use `.. mdinclude:: file` instead.
+Note: do not use `.. include:: file` directive to include markdown file even if
+in the markdown file, please use `.. mdinclude:: file` instead.
 
 ## Restrictions
 
-* reST's directive body is parsed as reST, cannot use markdown
-* Table column alignment is not supported (reST does not support this feature)
+* In the reST's directive, markdown is not available. Please write in reST.
+* Column alignment of tables is not supported (reST does not support this feature)
+
+If you find any bug or unexpected behaviour, please report it to
+[Issues](https://github.com/miyakogi/m2r/issues).
 
 ## Example
 
 See [example in document](https://miyakogi.github.io/m2r/example.html).
 
+I'm using m2r for writing user guide of [WDOM](https://github.com/miyakogi/wdom).
+So you can see it as another example. Its [HTML is
+here](http://wdom-py.readthedocs.io/en/latest/guide/index.html), and [its
+source code is here](https://github.com/miyakogi/wdom/tree/dev/docs/guide).
+
+## Acknowledgement
+
+m2r is written as an extension of
+[mistune](http://mistune.readthedocs.io/en/latest/), which is highly extensible
+pure-python markdown parser.
+Without the mistune, I couldn't write this. Thank you!
+
 ## Licence
 
-MIT
+[MIT](https://github.com/miyakogi/m2r/blob/master/LICENSE)
