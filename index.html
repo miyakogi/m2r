@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>M2R &mdash; M2R 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/slex.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="M2R 0.1.0 documentation" href="#" />
+    <link rel="next" title="Example" href="example.html" />
+  <!-- font -->
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Noto+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <!-- Style -->
+  <link rel="stylesheet" href="//cdn.concisecss.com/v3.4.0/concise.min.css">
+  
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+  <div class="document"> 
+    <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebarwrapper">
+
+  <h1 class="logo"><a href="#">M2R</a></h1>
+
+
+
+  <p class="blurb">Markdown mixed to reST</p>
+
+
+
+  
+    
+      <a class="github-mark" href="https://github.com/miyakogi/m2r/">
+        <img class="github-mark" src="_static/GitHub-Mark-64px.png">
+      </a>
+    
+  
+
+
+
+
+
+<h3>Contents</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+</ul>
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="example.html" title="next chapter">Example</a></li>
+  </ul></li>
+</ul>
+</div>
+<div class="searchbox" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div class="search-container">
+        <input class="form-control control search-input" type="text" name="q" />
+        <button class="btn button search-btn" type="submit" value="Go" />Go</button>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </div>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+    </div> 
+      <div class="documentwrapper">
+        <div class="body" role="main">
+          
+  <div class="section" id="m2r">
+<h1>M2R<a class="headerlink" href="#m2r" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/m2r"><img alt="PyPI" src="https://img.shields.io/pypi/v/m2r.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/m2r"><img alt="PyPI version" src="https://img.shields.io/pypi/pyversions/m2r.svg" /></a>
+<a class="reference external image-reference" href="http://m2r.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/m2r/badge/?version=latest" /></a>
+<a class="reference external image-reference" href="https://travis-ci.org/miyakogi/m2r"><img alt="Build Status" src="https://travis-ci.org/miyakogi/m2r.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/miyakogi/m2r"><img alt="codecov" src="https://codecov.io/gh/miyakogi/m2r/branch/master/graph/badge.svg" /></a>
+<hr class="docutils" />
+<p>M2R converts a markdown file including reST markups to a valid reST format.</p>
+<div class="section" id="why-another-converter">
+<h2>Why another converter?<a class="headerlink" href="#why-another-converter" title="Permalink to this headline">¶</a></h2>
+<p>I wanted to write sphinx document in markdown, since it&#8217;s widely used now and
+easy to write code blocks and lists. However, converters using pandoc or
+recommonmark do not support many reST markups and sphinx extensions. For
+example, reST&#8217;s reference link like <code class="docutils literal"><span class="pre">see</span> <span class="pre">`ref`_</span></code> (this is very convenient in
+long document in which same link appears multiple times) will be converted to
+a code block in HTML like <code class="docutils literal"><span class="pre">see</span> <span class="pre">&lt;code&gt;ref&lt;/code&gt;_</span></code>, which is not expected.</p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Basic markdown and some extensions (see below)<ul>
+<li>inline/block-level raw html</li>
+<li>fenced-code block</li>
+<li>tables</li>
+<li>footnotes (<code class="docutils literal"><span class="pre">[^1]</span></code>)</li>
+</ul>
+</li>
+<li>Inline- and Block-level reST markups<ul>
+<li>single- and multi-line directives (<code class="docutils literal"><span class="pre">..</span> <span class="pre">directive::</span></code>)</li>
+<li>inline-roles (<code class="docutils literal"><span class="pre">:code:`print(1)`</span> <span class="pre">...</span></code>)</li>
+<li>ref-link (<code class="docutils literal"><span class="pre">see</span> <span class="pre">`ref`_</span></code>)</li>
+<li>footnotes (<code class="docutils literal"><span class="pre">[#fn]_</span></code>)</li>
+<li>math extension inspired by <a class="reference external" href="https://recommonmark.readthedocs.io/en/latest/index.html">recommonmark</a></li>
+</ul>
+</li>
+<li>Sphinx extension<ul>
+<li>add markdown support for sphinx</li>
+<li><code class="docutils literal"><span class="pre">mdinclude</span></code> directive to include markdown from md or reST files</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Python 2.7 or Python 3.3+ is required.</p>
+<div class="highlight-guess"><div class="highlight"><pre><span></span>pip install m2r
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="command-line">
+<h3>Command Line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">m2r</span></code> command converts markdown file to reST format.</p>
+<div class="highlight-guess"><div class="highlight"><pre><span></span>m2r your_document.md [your_document2.md ...]
+</pre></div>
+</div>
+<p>Then you will find <code class="docutils literal"><span class="pre">your_document.rst</span></code> in the same directory.</p>
+</div>
+<div class="section" id="sphinx-integration">
+<h3>Sphinx Integration<a class="headerlink" href="#sphinx-integration" title="Permalink to this headline">¶</a></h3>
+<p>In your conf.py, add the following lines.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="s1">&#39;m2r&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># source_suffix = &#39;.rst&#39;</span>
+<span class="n">source_suffix</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.rst&#39;</span><span class="p">,</span> <span class="s1">&#39;.md&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Write index.md and run <code class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></code>.</p>
+<p>When <code class="docutils literal"><span class="pre">m2r</span></code> extension is enabled on sphinx and <code class="docutils literal"><span class="pre">.md</span></code> file is loaded, m2r
+converts to reST and pass to sphinx, not making new <code class="docutils literal"><span class="pre">.rst</span></code> file.</p>
+<div class="section" id="mdinclude-directive">
+<h4>mdinclude directive<a class="headerlink" href="#mdinclude-directive" title="Permalink to this headline">¶</a></h4>
+<p>Like <code class="docutils literal"><span class="pre">..</span> <span class="pre">include::</span> <span class="pre">file</span></code> directive, <code class="docutils literal"><span class="pre">..</span> <span class="pre">mdinclude::</span> <span class="pre">file</span></code> directive inserts
+markdown file at the line.</p>
+<p>Note: do not use <code class="docutils literal"><span class="pre">..</span> <span class="pre">include::</span> <span class="pre">file</span></code> directive to include markdown file even if
+in the markdown file, please use <code class="docutils literal"><span class="pre">..</span> <span class="pre">mdinclude::</span> <span class="pre">file</span></code> instead.</p>
+</div>
+</div>
+</div>
+<div class="section" id="restrictions">
+<h2>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>In the reST&#8217;s directive, markdown is not available. Please write in reST.</li>
+<li>Column alignment of tables is not supported (reST does not support this feature)</li>
+</ul>
+<p>If you find any bug or unexpected behaviour, please report it to
+<a class="reference external" href="https://github.com/miyakogi/m2r/issues">Issues</a>.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://miyakogi.github.io/m2r/example.html">example in document</a>.</p>
+<p>I&#8217;m using m2r for writing user guide of <a class="reference external" href="https://github.com/miyakogi/wdom">WDOM</a>.
+So you can see it as another example. Its <a class="reference external" href="http://wdom-py.readthedocs.io/en/latest/guide/index.html">HTML is
+here</a>, and <a class="reference external" href="https://github.com/miyakogi/wdom/tree/dev/docs/guide">its
+source code is here</a>.</p>
+</div>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>m2r is written as an extension of
+<a class="reference external" href="http://mistune.readthedocs.io/en/latest/">mistune</a>, which is highly extensible
+pure-python markdown parser.
+Without the mistune, I couldn&#8217;t write this. Thank you!</p>
+</div>
+<div class="section" id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/miyakogi/m2r/blob/master/LICENSE">MIT</a></p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example.html#basic-markups-inline">Basic Markups (inline)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#basic-markups-block">Basic Markups (block)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#extensions">Extensions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+        </div>
+      </div>
+  </div>
+  <div class="footer">
+    &copy;2016, Hiroyuki Takagi.
+    
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.2</a>
+      
+    
+      |
+      <a href="_sources/index.txt" rel="nofollow">Page source</a>
+  </div>
+
+  
+    <a href="https://github.com/miyakogi/m2r" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+  
+
+  
+
+  </body>
+</html>
