@@ -6,7 +6,7 @@ Source code is [here](https://github.com/miyakogi/m2r/blob/master/docs/example.m
 ## Basic Markups (inline)
 
 A **strong**, *emphasis*, ~~deleted~~, `code with single-backtick`,
-``code with two-backtick``, :code:`rest's code role`, and <del>inline html</del>delete.
+``code with two-backticks``, :code:`reST's code role`, and <del>inline html</del>delete.
 
 ### Link
 
@@ -14,9 +14,9 @@ Auto link to http://example.com/.
 
 Link to [example.com](http://example.com/) in markdown.
 
-Link to `example.com <http://example.com/>`_ in rest.
+Link to `example.com <http://example.com/>`_ in reST.
 
-Link to `example`_ in rest_ref.
+Link to `example`_ in reST_ref.
 
 .. _example: http://example.com
 
@@ -78,7 +78,7 @@ Simple, indented code block
 
     pip install sphinx
 
-Code block with triple backticks.
+Code block with triple backticks and language.
 
 ```python
 def a(n: int) -> None:
@@ -86,31 +86,43 @@ def a(n: int) -> None:
         print(i)
 ```
 
-Rest style code block.
+Triple-tildes (`~~~`) are also available.
+
+~~~
+def a(n: int) -> None:
+    for i in range(n):
+        print(i)
+~~~
+
+Here is reST style code block.
 
 .. code-block:: python
 
-   print('\n')
+    if True:
+        print('\n')
 
 ## Extensions
 
-### Table (markdown)
+### Table (Markdown-Style)
+
+(cell-alignment is not supported currently)
 
 | Table Header 1 | Table Header 2 | Table Header 3 |
-|:---------------|:--------------:|---------------:|
-| left           | center         | right          |
+|----------------|----------------|----------------|
+| normal         | *italic*       | **bold**       |
+| `code` | ~~deleted~~  | <b>inline-html</b> |
 
 ### Math
 
 This is `$E = mc^2$` inline math.
 
-The below is math-block (markdown).
+The below is math-block (markdown-style).
 
 ```math
 E = mc^2
 ```
 
-The below is math-block (rest).
+The below is reST-style math-block.
 
 .. math::
 
@@ -120,9 +132,9 @@ The below is math-block (rest).
 
 Footnote[^1] and footnote[^key] with markdown.
 
-Footnote with rest\ [#a]_.
+Footnote with reST\ [#a]_.
 
+<!-- footnote definition -->
 [^1]: footnote 1
 [^key]: footnote key
-
-.. [#a] rest footnote
+.. [#a] reST footnote

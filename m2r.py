@@ -153,16 +153,27 @@ class RestRenderer(mistune.Renderer):
         :param header: header part of the table.
         :param body: body part of the table.
         """
-        table = ('<table>\n<thead>\n{0}</thead>\n'
-                 '<tbody>\n{1}</tbody>\n</table>').format(header, body)
-        return '\n\n.. raw:: html\n\n' + self._indent_block(table) + '\n\n'
+        table = '\n.. list-table::\n'
+        if header and not header.isspace():
+            table = table + self.indent + ':header-rows: 1\n\n' + self._indent_block(header) + '\n'
+        else:
+            table = table + '\n'
+        table = table + self._indent_block(body) + '\n\n'
+        return table
 
     def table_row(self, content):
         """Rendering a table row. Like ``<tr>``.
 
         :param content: content of current table row.
         """
-        return '<tr>\n%s</tr>\n' % content
+        contents = content.splitlines()
+        if not contents:
+            return ''
+        clist = ['* ' + contents[0]]
+        if len(contents) > 1:
+            for c in contents[1:]:
+                clist.append('  ' + c)
+        return '\n'.join(clist) + '\n'
 
     def table_cell(self, content, **flags):
         """Rendering a table cell. Like ``<th>`` ``<td>``.
@@ -171,16 +182,7 @@ class RestRenderer(mistune.Renderer):
         :param header: whether this is header or not.
         :param align: align of current table cell.
         """
-        if flags['header']:
-            tag = 'th'
-        else:
-            tag = 'td'
-        align = flags['align']
-        if not align:
-            return '<%s>%s</%s>\n' % (tag, content, tag)
-        return '<%s style="text-align:%s">%s</%s>\n' % (
-            tag, align, content, tag
-        )
+        return '- ' + content + '\n'
 
     def double_emphasis(self, text):
         """Rendering **strong** text.

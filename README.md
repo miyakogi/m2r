@@ -15,9 +15,9 @@ M2R
 
 Markdown with reStructuredText (reST) extensions.
 
-## Features
+M2R converts a markdown including reST markups to a valid reST format.
 
-Write markdown and reST in a single file.
+## Features
 
 * Basic markdown and some extensions (below)
     * inline/block embedded html
@@ -55,13 +55,18 @@ extensions = [
 source_suffix = ['.rst', '.md']
 ```
 
-Then write index.md or index.rst, and run `make html`.
+Write index.md and run `make html`.
 
 #### mdinclude directive
 
 Like `.. include:: file` directive, `.. mdinclude:: file` directive inserts markdown file at the line.
 
 Note: do not use `.. include:: file` directive to include markdown file, use `.. mdinclude:: file` instead.
+
+## Restrictions
+
+* reST's directive body is parsed as reST, cannot use markdown
+* Table column alignment is not supported (reST does not support this feature)
 
 ## Example
 
