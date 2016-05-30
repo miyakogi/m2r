@@ -338,6 +338,7 @@ class M2R(mistune.Markdown):
 
     def parse(self, text):
         output = super(M2R, self).parse(text)
+        output = output.replace('\\ \n', '\n')
         if self.renderer._include_raw_html:
             return prolog + output
         else:

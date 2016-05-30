@@ -5,9 +5,8 @@ from unittest import TestCase, skip
 
 from docutils.core import Publisher
 from docutils import io
-from mistune import Markdown
 
-from m2r import prolog, RestRenderer, RestInlineLexer, RestBlockLexer, M2R
+from m2r import prolog, M2R
 
 
 class RendererTestBase(TestCase):
@@ -75,7 +74,7 @@ class TestBasic(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            prolog + '\nabc def\ :raw-html-m2r:`<br>`\ \nghi' + '\n',
+            prolog + '\nabc def\ :raw-html-m2r:`<br>`\nghi' + '\n',
         )
 
 
@@ -83,7 +82,7 @@ class TestInlineMarkdown(RendererTestBase):
     def test_inline_code(self):
         src = '`a`'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ ``a``\ ')
+        self.assertEqual(out.replace('\n', ''), '\ ``a``')
 
     def test_strikethrough(self):
         src = ('~~a~~')
@@ -92,12 +91,12 @@ class TestInlineMarkdown(RendererTestBase):
     def test_emphasis(self):
         src = '*a*'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ *a*\ ')
+        self.assertEqual(out.replace('\n', ''), '\ *a*')
 
     def test_double_emphasis(self):
         src = '**a**'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ **a**\ ')
+        self.assertEqual(out.replace('\n', ''), '\ **a**')
 
     def test_autolink(self):
         src = 'link to http://example.com/ in sentence.'
@@ -618,4 +617,4 @@ class TestDirective(RendererTestBase):
             '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + comment + '\n\ ``eoc``\ \n')
+        self.assertEqual(out, '\n' + comment + '\n\ ``eoc``\n')
