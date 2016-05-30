@@ -20,7 +20,7 @@ except ImportError:
 readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.md')
 readme = parse_from_file(readme_file)
 
-install_requires = ['mistune', 'docutils', 'sphinx']
+install_requires = ['mistune', 'docutils']
 
 setup(
     name='m2r',

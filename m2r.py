@@ -8,7 +8,6 @@ from argparse import ArgumentParser, Namespace
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
-from sphinx.parsers import Parser
 import mistune
 
 
@@ -330,7 +329,7 @@ class M2R(mistune.Markdown):
 
 
 
-class M2RParser(rst.Parser, Parser):
+class M2RParser(rst.Parser):
     def parse(self, inputstring, document):
         converter = M2R()
         # super failes in python 2 since rst.Parser is not inheritting object
