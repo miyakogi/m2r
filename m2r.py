@@ -409,9 +409,12 @@ def setup(app):
 # for command-line use
 parser = ArgumentParser()
 options = Namespace()
-parser.add_argument('input_file', nargs='+')
-parser.add_argument('--overwrite', action='store_true', default=False)
-parser.add_argument('--dry-run', action='store_true', default=False)
+parser.add_argument('input_file', nargs='+',
+                    help='files to convert to reST format')
+parser.add_argument('--overwrite', action='store_true', default=False,
+                    help='overwrite output file without confirmaion')
+parser.add_argument('--dry-run', action='store_true', default=False,
+                    help='print conversion result and not save output file')
 
 
 def parse_from_file(file):
