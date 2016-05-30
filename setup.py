@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 from os import path
 
 try:
@@ -9,16 +8,13 @@ try:
 except ImportError:
     from distutils.core import setup
 
+readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.md')
 try:
     from m2r import parse_from_file
+    readme = parse_from_file(readme_file)
 except ImportError:
-    def parse_from_file(file):
-        with open(file) as f:
-            content = f.read()
-        return content
-
-readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.md')
-readme = parse_from_file(readme_file)
+    with open(readme_file) as f:
+        readme = f.read()
 
 install_requires = ['mistune', 'docutils']
 
