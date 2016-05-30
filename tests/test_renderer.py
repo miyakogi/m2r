@@ -73,7 +73,10 @@ class TestBasic(RendererTestBase):
     def test_linebreak(self):
         src = 'abc def  \nghi'
         out = self.conv(src)
-        self.assertEqual(out, prolog + '\nabc def\ :raw-html-m2r:`<br>`\ \nghi' + '\n')
+        self.assertEqual(
+            out,
+            prolog + '\nabc def\ :raw-html-m2r:`<br>`\ \nghi' + '\n',
+        )
 
 
 class TestInlineMarkdown(RendererTestBase):
@@ -104,12 +107,17 @@ class TestInlineMarkdown(RendererTestBase):
     def test_link(self):
         src = 'this is a [link](http://example.com/).'
         out = self.conv(src)
-        self.assertEqual(out, '\nthis is a \ `link <http://example.com/>`_\ .\n')
+        self.assertEqual(
+            out, '\nthis is a \ `link <http://example.com/>`_\ .\n')
 
     def test_image_link(self):
         src = '[![Alt Text](image_taget_url)](link_target_url)'
         out = self.conv(src)
-        self.assertEqual(out, '\n\n.. image:: image_taget_url\n   :target: link_target_url\n   :alt: Alt Text\n')
+        self.assertEqual(
+            out,
+            '\n\n.. image:: image_taget_url\n'
+            '   :target: link_target_url\n   :alt: Alt Text\n\n',
+        )
 
     def test_rest_role(self):
         src = 'a :code:`some code` inline.'
@@ -129,12 +137,18 @@ class TestInlineMarkdown(RendererTestBase):
     def test_rest_role_incomplete(self):
         src = 'a co:`de` and `RefLink <http://example.com>`_ here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na co:\ ``de``\  and `RefLink <http://example.com>`_ here.\n')
+        self.assertEqual(
+            out,
+            '\na co:\ ``de``\  and `RefLink <http://example.com>`_ here.\n',
+        )
 
     def test_rest_role_incomplete2(self):
         src = 'a `RefLink <http://example.com>`_ and co:`de` here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na `RefLink <http://example.com>`_ and co:\ ``de``\  here.\n')
+        self.assertEqual(
+            out,
+            '\na `RefLink <http://example.com>`_ and co:\ ``de``\  here.\n',
+        )
 
     def test_rest_role_with_code(self):
         src = 'a `code` and :code:`rest` here.'
@@ -164,7 +178,8 @@ class TestInlineMarkdown(RendererTestBase):
     def test_inline_html(self):
         src = 'this is <s>html</s>.'
         out = self.conv(src)
-        self.assertEqual(out, prolog + '\nthis is \ :raw-html-m2r:`<s>html</s>`\ .\n')
+        self.assertEqual(
+            out, prolog + '\nthis is \ :raw-html-m2r:`<s>html</s>`\ .\n')
 
     def test_block_html(self):
         src = '<h1>title</h1>'
@@ -189,7 +204,6 @@ class TestBlockQuote(RendererTestBase):
         src = '> q1\n> > q2\n> q3'
         out = self.conv(src)
         self.assertEqual(out, '\n..\n\n   q1\n\n   ..\n      q2\n\n   q3\n\n')
-
 
 
 class TestCodeBlock(RendererTestBase):
@@ -228,7 +242,10 @@ class TestCodeBlock(RendererTestBase):
             '```',
         ])
         out = self.conv(src)
-        self.assertEqual(out, '\n.. code-block::\n\n   pip install sphinx\n       new line\n')
+        self.assertEqual(
+            out,
+            '\n.. code-block::\n\n   pip install sphinx\n       new line\n',
+        )
 
     def test_python_code_block(self):
         src = '\n'.join([
@@ -247,7 +264,10 @@ class TestCodeBlock(RendererTestBase):
             '```',
         ])
         out = self.conv(src)
-        self.assertEqual(out, '\n.. code-block:: python\n\n   def a(i):\n       print(i)\n')
+        self.assertEqual(
+            out,
+            '\n.. code-block:: python\n\n   def a(i):\n       print(i)\n',
+        )
 
 
 class TestImage(RendererTestBase):
@@ -255,11 +275,14 @@ class TestImage(RendererTestBase):
         src = '![alt text](a.png)'
         out = self.conv(src)
         # first and last newline is inserted by paragraph
-        self.assertEqual(out, '\n\n\n.. image:: a.png\n   :target: a.png\n   :alt: alt text\n\n\n')
+        self.assertEqual(
+            out,
+            '\n\n.. image:: a.png\n   :target: a.png\n   :alt: alt text\n\n',
+        )
 
-    def test_image_tiele(self):
+    def test_image_title(self):
         src = '![alt text](a.png "title")'
-        out = self.conv(src)
+        self.conv(src)
         # title is not supported now
 
 
@@ -290,7 +313,14 @@ class TestList(RendererTestBase):
             '* list 3',
         ])
         out = self.conv(src)
-        self.assertEqual(out, '\n\n* list 1\n* list 2\n\n  * list 2.1\n  * list 2.2\n\n* list 3\n')
+        self.assertEqual(
+            out,
+            '\n\n* list 1\n'
+            '* list 2\n\n'
+            '  * list 2.1\n'
+            '  * list 2.2\n\n'
+            '* list 3\n',
+        )
 
     def test_nested_ul_2(self):
         src = '\n'.join([
@@ -323,7 +353,16 @@ class TestList(RendererTestBase):
             '3. list 3',
         ])
         out = self.conv(src)
-        self.assertEqual(out, '\n\n#. list 1\n#. list 2\n\n   #. list 2.1\n   #. list 2.2\n\n#. list 3\n')
+        self.assertEqual(
+            out,
+            '\n\n#. list 1\n'
+            '#. list 2\n'
+            '\n'
+            '   #. list 2.1\n'
+            '   #. list 2.2\n'
+            '\n'
+            '#. list 3\n',
+        )
 
     def test_nested_ol_2(self):
         src = '\n'.join([
@@ -540,7 +579,8 @@ class TestFootNote(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n'.join([
             '',
-            'This is a\ [#fn-1]_\  footnote\ [#fn-2]_\  ref\ [#fn-ref]_\  with rst [#a]_.',
+            'This is a\ [#fn-1]_\  '
+            'footnote\ [#fn-2]_\  ref\ [#fn-ref]_\  with rst [#a]_.',
             '',
             '.. [#a] note rst',  # one empty line inserted...
             '',
@@ -569,9 +609,13 @@ class TestDirective(RendererTestBase):
         self.assertEqual(out, '\n..\n\n   comment\n\nnewline\n')
 
     def test_comment_multiline(self):
-        comment = ('.. this is comment.\n   this is also comment.\n\n\n'
-               '    comment may include empty line.\n'
-               '\n\n')
+        comment = (
+            '.. this is comment.\n'
+            '   this is also comment.\n'
+            '\n'
+            '\n'
+            '    comment may include empty line.\n'
+            '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
         self.assertEqual(out, '\n' + comment + '\n\ ``eoc``\ \n')

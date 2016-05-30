@@ -4,18 +4,17 @@
 import sys
 import os
 from os import path
-import time
 from copy import copy
 from unittest import TestCase
+
+from m2r import parse_from_file, main, options
+
 if sys.version_info < (3, ):
-    from mock import patch, call
+    from mock import patch
     _builtin = '__builtin__'
 else:
-    from unittest.mock import patch, call
+    from unittest.mock import patch
     _builtin = 'builtins'
-
-import m2r
-from m2r import parse_from_file, main, options
 
 curdir = path.dirname(path.abspath(__file__))
 test_md = path.join(curdir, 'test.md')

@@ -18,6 +18,7 @@ prolog = '''\
 
 '''
 
+
 class RestBlockGrammar(mistune.BlockGrammar):
     directive = re.compile(
             r'^(\.\.\s+.*?)\n(?=\S)',
@@ -49,7 +50,8 @@ class RestInlineGrammar(mistune.InlineGrammar):
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
-    default_rules = ['image_link', 'rest_role', 'rest_link', 'inline_math'] + mistune.InlineLexer.default_rules
+    default_rules = (['image_link', 'rest_role', 'rest_link', 'inline_math'] +
+                     mistune.InlineLexer.default_rules)
 
     def output_image_link(self, m):
         """Pass through rest role."""
@@ -84,7 +86,8 @@ class RestRenderer(mistune.Renderer):
     }
 
     def _indent_block(self, block):
-        return '\n'.join(self.indent + line  if line else '' for line in block.splitlines())
+        return '\n'.join(self.indent + line if line else ''
+                         for line in block.splitlines())
 
     def _raw_html(self, html):
         self._include_raw_html = True
@@ -134,10 +137,10 @@ class RestRenderer(mistune.Renderer):
         mark = '#. ' if ordered else '* '
         lines = body.splitlines()
         for i, line in enumerate(lines):
-            _l = line.lstrip()
             if line and not line.startswith(self.list_marker):
                 lines[i] = ' ' * len(mark) + line
-        return '\n{}\n'.format('\n'.join(lines)).replace(self.list_marker, mark)
+        return '\n{}\n'.format(
+            '\n'.join(lines)).replace(self.list_marker, mark)
 
     def list_item(self, text):
         """Rendering list item snippet. Like ``<li>``."""
@@ -155,7 +158,8 @@ class RestRenderer(mistune.Renderer):
         """
         table = '\n.. list-table::\n'
         if header and not header.isspace():
-            table = table + self.indent + ':header-rows: 1\n\n' + self._indent_block(header) + '\n'
+            table = (table + self.indent + ':header-rows: 1\n\n' +
+                     self._indent_block(header) + '\n')
         else:
             table = table + '\n'
         table = table + self._indent_block(body) + '\n\n'
@@ -251,8 +255,15 @@ class RestRenderer(mistune.Renderer):
         :param title: title text of the image.
         :param text: alt text of the image.
         """
-        # rst not support title option, and I couldn't find title attribute in HTML standard
-        return '\n\n.. image:: {src}\n   :target: {src}\n   :alt: {text}\n\n'.format(**locals())
+        # rst does not support title option
+        # and I couldn't find title attribute in HTML standard
+        return '\n'.join([
+            '',
+            '.. image:: {}'.format(src),
+            '   :target: {}'.format(src),
+            '   :alt: {}'.format(text),
+            '',
+        ])
 
     def inline_html(self, html):
         """Rendering span level pure html content.
@@ -295,7 +306,13 @@ class RestRenderer(mistune.Renderer):
 
     """Below outputs are for rst."""
     def image_link(self, url, target, alt):
-        return '\n.. image:: {url}\n   :target: {target}\n   :alt: {alt}'.format(**locals())
+        return '\n'.join([
+            '',
+            '.. image:: {}'.format(url),
+            '   :target: {}'.format(target),
+            '   :alt: {}'.format(alt),
+            '',
+        ])
 
     def rest_role(self, text):
         return text
@@ -312,10 +329,12 @@ class RestRenderer(mistune.Renderer):
 
 
 class M2R(mistune.Markdown):
-    def __init__(self, renderer=None, inline=RestInlineLexer, block=RestBlockLexer, **kwargs):
+    def __init__(self, renderer=None, inline=RestInlineLexer,
+                 block=RestBlockLexer, **kwargs):
         if renderer is None:
             renderer = RestRenderer(**kwargs)
-        super(M2R, self).__init__(renderer, inline=inline, block=block, **kwargs)
+        super(M2R, self).__init__(renderer, inline=inline, block=block,
+                                  **kwargs)
 
     def parse(self, text):
         output = super(M2R, self).parse(text)
@@ -326,7 +345,6 @@ class M2R(mistune.Markdown):
 
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
-
 
 
 class M2RParser(rst.Parser):
@@ -363,7 +381,7 @@ class MdInclude(rst.Directive):
         # get options (currently not use directive-specific options)
         encoding = self.options.get(
             'encoding', self.state.document.settings.input_encoding)
-        e_handler=self.state.document.settings.input_encoding_error_handler
+        e_handler = self.state.document.settings.input_encoding_error_handler
         tab_width = self.options.get(
             'tab-width', self.state.document.settings.tab_width)
 
@@ -380,7 +398,7 @@ class MdInclude(rst.Directive):
                               (self.name, SafeString(path)))
         except IOError as error:
             raise self.severe('Problems with "%s" directive path:\n%s.' %
-                      (self.name, ErrorString(error)))
+                              (self.name, ErrorString(error)))
 
         # read from the file
         try:
@@ -428,7 +446,8 @@ def parse_from_file(file):
 def save_to_file(file, src):
     target = os.path.splitext(file)[0] + '.rst'
     if not options.overwrite and os.path.exists(target):
-        confirm = input('{} already exists. overwrite it? [y/n]: '.format(target))
+        confirm = input('{} already exists. overwrite it? [y/n]: '.format(
+            target))
         if confirm.upper() not in ('Y', 'YES'):
             print('skip {}'.format(file))
             return
