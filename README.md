@@ -93,7 +93,8 @@ If you find any bug or unexpected behaviour, please report it to
 
 ## Example
 
-See [example in document](https://miyakogi.github.io/m2r/example.html).
+See [example document](https://miyakogi.github.io/m2r/example.html) and [its
+source code](https://github.com/miyakogi/m2r/blob/master/docs/example.md).
 
 I'm using m2r for writing user guide of [WDOM](https://github.com/miyakogi/wdom).
 So you can see it as another example. Its [HTML is
