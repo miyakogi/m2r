@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function, unicode_literals
 import os
 import re
 from argparse import ArgumentParser, Namespace
@@ -409,7 +410,8 @@ def setup(app):
 parser = ArgumentParser()
 options = Namespace()
 parser.add_argument('input_file', nargs='+')
-parser.add_argument('--save', action='store_true', default=False)
+parser.add_argument('--overwrite', action='store_true', default=False)
+parser.add_argument('--dry-run', action='store_true', default=False)
 
 
 def parse_from_file(file):
@@ -422,18 +424,25 @@ def parse_from_file(file):
 
 
 def save_to_file(file, src):
-    with open(os.path.splitext(file)[0] + '.rst', 'w') as f:
+    target = os.path.splitext(file)[0] + '.rst'
+    if not options.overwrite and os.path.exists(target):
+        confirm = input('{} already exists. overwrite it? [y/n]: '.format(target))
+        if confirm.upper() not in ('Y', 'YES'):
+            print('skip {}'.format(file))
+            return
+    with open(target, 'w') as f:
         f.write(src)
 
 
 def main():
+    # parse cli options
     parser.parse_known_args(namespace=options)
     for file in options.input_file:
         output = parse_from_file(file)
-        if options.save:
-            save_to_file(file, output)
-        else:
+        if options.dry_run:
             print(output)
+        else:
+            save_to_file(file, output)
 
 
 if __name__ == '__main__':
