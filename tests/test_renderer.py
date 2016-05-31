@@ -10,10 +10,8 @@ from m2r import prolog, M2R
 
 
 class RendererTestBase(TestCase):
-    def setUp(self):
-        self.md = M2R()
-
-    def conv(self, src):
+    def conv(self, src, **kwargs):
+        self.md = M2R(**kwargs)
         out = self.md(src)
         self.check_rst(out)
         return out
@@ -86,7 +84,7 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_strikethrough(self):
         src = ('~~a~~')
-        out = self.conv(src)
+        self.conv(src)
 
     def test_emphasis(self):
         src = '*a*'
@@ -539,7 +537,7 @@ print(1)
 ---
 end
 '''
-        out = self.conv(src)
+        self.conv(src)
 
 
 class TestTable(RendererTestBase):
@@ -618,3 +616,20 @@ class TestDirective(RendererTestBase):
         src = comment + '`eoc`'
         out = self.conv(src)
         self.assertEqual(out, '\n' + comment + '\n\ ``eoc``\n')
+
+
+class TestRestCode(RendererTestBase):
+    def test_rest_code_block_empty(self):
+        src = '\n\n::\n\n'
+        out = self.conv(src)
+        self.assertEqual(out, '\n\n')
+
+    def test_eol_marker(self):
+        src = 'a::\n\n    code\n'
+        out = self.conv(src)
+        self.assertEqual(out, '\na:\n\n.. code-block::\n\n   code\n')
+
+    def test_eol_marker_remove(self):
+        src = 'a ::\n\n    code\n'
+        out = self.conv(src)
+        self.assertEqual(out, '\na\n\n.. code-block::\n\n   code\n')

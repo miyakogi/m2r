@@ -24,16 +24,28 @@ class RestBlockGrammar(mistune.BlockGrammar):
             r'^(\.\.\s+.*?)\n(?=\S)',
             re.DOTALL | re.MULTILINE,
         )
+    rest_code_block = re.compile(
+            r'^::\s*$',
+            re.DOTALL | re.MULTILINE,
+        )
 
 
 class RestBlockLexer(mistune.BlockLexer):
     grammar_class = RestBlockGrammar
-    default_rules = ['directive'] + mistune.BlockLexer.default_rules
+    default_rules = [
+        'directive',
+        'rest_code_block',
+    ] + mistune.BlockLexer.default_rules
 
     def parse_directive(self, m):
         self.tokens.append({
             'type': 'directive',
             'text': m.group(1),
+        })
+
+    def parse_rest_code_block(self, m):
+        self.tokens.append({
+            'type': 'rest_code_block',
         })
 
 
@@ -44,14 +56,20 @@ class RestInlineGrammar(mistune.InlineGrammar):
     rest_role = re.compile(r':.*?:`.*?`')
     rest_link = re.compile(r'`[^`]*?`_')
     inline_math = re.compile(r'`\$(.*)?\$`')
-    # add colon as special text
-    text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~]|https?://| {2,}\n|$)')
+    eol_literal_marker = re.compile(r'(\s+)?::\s*$')
+    # add colon and space as special text
+    text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~ ]|https?://| {2,}\n|$)')
 
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
-    default_rules = (['image_link', 'rest_role', 'rest_link', 'inline_math'] +
-                     mistune.InlineLexer.default_rules)
+    default_rules = [
+        'image_link',
+        'rest_role',
+        'rest_link',
+        'inline_math',
+        'eol_literal_marker',
+    ] + mistune.InlineLexer.default_rules
 
     def output_image_link(self, m):
         """Pass through rest role."""
@@ -69,6 +87,11 @@ class RestInlineLexer(mistune.InlineLexer):
     def output_inline_math(self, m):
         """Pass through rest link."""
         return self.renderer.inline_math(m.group(1))
+
+    def output_eol_literal_marker(self, m):
+        """Pass through rest link."""
+        marker = ':' if m.group(1) is None else ''
+        return self.renderer.eol_literal_marker(marker)
 
 
 class RestRenderer(mistune.Renderer):
@@ -324,8 +347,15 @@ class RestRenderer(mistune.Renderer):
         """Extension of recommonmark"""
         return '\ :math:`{}`\ '.format(math)
 
+    def eol_literal_marker(self, marker):
+        """Extension of recommonmark"""
+        return marker
+
     def directive(self, text):
         return '\n' + text + '\n'
+
+    def rest_code_block(self):
+        return '\n\n'
 
 
 class M2R(mistune.Markdown):
@@ -346,6 +376,9 @@ class M2R(mistune.Markdown):
 
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
+
+    def output_rest_code_block(self):
+        return self.renderer.rest_code_block()
 
 
 class M2RParser(rst.Parser, object):

@@ -3,6 +3,11 @@ Version 0.2
 
 (next version)
 
+Version 0.1.2 (2016-06-01)
+--------------------------
+
+* Add reST's `::` marker support
+
 Version 0.1.1 (2016-05-30)
 --------------------------
 
