@@ -348,11 +348,11 @@ class M2R(mistune.Markdown):
         return self.renderer.directive(self.token['text'])
 
 
-class M2RParser(rst.Parser):
+class M2RParser(rst.Parser, object):
     def parse(self, inputstring, document):
         converter = M2R()
         # super failes in python 2 since rst.Parser is not inheritting object
-        rst.Parser.parse(self, converter(inputstring), document)
+        super(M2RParser, self).parse(converter(inputstring), document)
 
 
 class MdInclude(rst.Directive):
