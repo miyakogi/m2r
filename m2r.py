@@ -60,6 +60,14 @@ class RestInlineGrammar(mistune.InlineGrammar):
     # add colon and space as special text
     text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~ ]|https?://| {2,}\n|$)')
 
+    def no_underscore_emphasis(self):
+        self.double_emphasis = re.compile(
+            r'^\*{2}([\s\S]+?)\*{2}(?!\*)'  # **word**
+        )
+        self.emphasis = re.compile(
+            r'^\*((?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
+        )
+
 
 class RestInlineLexer(mistune.InlineLexer):
     grammar_class = RestInlineGrammar
@@ -70,6 +78,11 @@ class RestInlineLexer(mistune.InlineLexer):
         'inline_math',
         'eol_literal_marker',
     ] + mistune.InlineLexer.default_rules
+
+    def __init__(self, *args, no_underscore_emphasis=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        if no_underscore_emphasis:
+            self.rules.no_underscore_emphasis()
 
     def output_image_link(self, m):
         """Pass through rest role."""

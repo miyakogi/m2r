@@ -91,10 +91,30 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out.replace('\n', ''), '\ *a*')
 
+    def test_emphasis_(self):
+        src = '_a_'
+        out = self.conv(src)
+        self.assertEqual(out.replace('\n', ''), '\ *a*')
+
+    def test_emphasis_no_(self):
+        src = '_a_'
+        out = self.conv(src, no_underscore_emphasis=True)
+        self.assertEqual(out.replace('\n', ''), '_a_')
+
     def test_double_emphasis(self):
         src = '**a**'
         out = self.conv(src)
         self.assertEqual(out.replace('\n', ''), '\ **a**')
+
+    def test_double_emphasis__(self):
+        src = '__a__'
+        out = self.conv(src)
+        self.assertEqual(out.replace('\n', ''), '\ **a**')
+
+    def test_emphasis_no__(self):
+        src = '__a__'
+        out = self.conv(src, no_underscore_emphasis=True)
+        self.assertEqual(out.replace('\n', ''), '__a__')
 
     def test_autolink(self):
         src = 'link to http://example.com/ in sentence.'
