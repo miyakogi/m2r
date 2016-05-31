@@ -26,6 +26,7 @@ class TestConvert(TestCase):
         # reset cli options
         options.overwrite = False
         options.dry_run = False
+        options.no_underscore_emphasis = False
         self._orig_argv = copy(sys.argv)
         if path.exists(test_rst):
             with open(test_rst) as f:
@@ -94,3 +95,11 @@ class TestConvert(TestCase):
         with open(target_file) as f:
             first_line = f.readline()
         self.assertNotIn('test', first_line)
+
+    def test_underscore_option(self):
+        sys.argv = [
+            sys.argv[0], '--no-underscore-emphasis', '--dry-run', test_md]
+        with patch(_builtin + '.print') as m:
+            main()
+        self.assertIn('__content__', m.call_args[0][0])
+        self.assertNotIn('**content**', m.call_args[0][0])

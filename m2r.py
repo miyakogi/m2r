@@ -4,7 +4,7 @@
 from __future__ import print_function, unicode_literals
 import os
 import re
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser, Namespace, ArgumentError
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
@@ -17,6 +17,23 @@ prolog = '''\
    :format: html
 
 '''
+
+# for command-line use
+parser = ArgumentParser()
+options = Namespace()
+parser.add_argument('input_file', nargs='*',
+                    help='files to convert to reST format')
+parser.add_argument('--overwrite', action='store_true', default=False,
+                    help='overwrite output file without confirmaion')
+parser.add_argument('--dry-run', action='store_true', default=False,
+                    help='print conversion result and not save output file')
+parser.add_argument('--no-underscore-emphasis', action='store_true',
+                    default=False,
+                    help='do not use underscore (_) for emphasis')
+
+
+def parse_options():
+    parser.parse_known_args(namespace=options)
 
 
 class RestBlockGrammar(mistune.BlockGrammar):
@@ -59,13 +76,23 @@ class RestInlineGrammar(mistune.InlineGrammar):
     eol_literal_marker = re.compile(r'(\s+)?::\s*$')
     # add colon and space as special text
     text = re.compile(r'^[\s\S]+?(?=[\\<!\[:_*`~ ]|https?://| {2,}\n|$)')
+    # __word__ or **word**
+    double_emphasis = re.compile(
+        r'^([_*]){2}(?P<text>[\s\S]+?)\1{2}(?!\1)'
+    )
+    # _word_ or *word*
+    emphasis = re.compile(
+        r'^\b_((?:__|[^_])+?)_\b'  # _word_
+        r'|'
+        r'^\*(?P<text>(?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
+    )
 
     def no_underscore_emphasis(self):
         self.double_emphasis = re.compile(
-            r'^\*{2}([\s\S]+?)\*{2}(?!\*)'  # **word**
+            r'^\*{2}(?P<text>[\s\S]+?)\*{2}(?!\*)'  # **word**
         )
         self.emphasis = re.compile(
-            r'^\*((?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
+            r'^\*(?P<text>(?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
         )
 
 
@@ -79,10 +106,25 @@ class RestInlineLexer(mistune.InlineLexer):
         'eol_literal_marker',
     ] + mistune.InlineLexer.default_rules
 
-    def __init__(self, *args, no_underscore_emphasis=False, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        no_underscore_emphasis = kwargs.pop('no_underscore_emphasis', False)
+        super(RestInlineLexer, self).__init__(*args, **kwargs)
         if no_underscore_emphasis:
             self.rules.no_underscore_emphasis()
+        elif not _is_sphinx:
+            parse_options()
+            if options.no_underscore_emphasis:
+                self.rules.no_underscore_emphasis()
+
+    def output_double_emphasis(self, m):
+        # may include code span
+        text = self.output(m.group('text'))
+        return self.renderer.double_emphasis(text)
+
+    def output_emphasis(self, m):
+        # may include code span
+        text = self.output(m.group('text') or m.group(1))
+        return self.renderer.emphasis(text)
 
     def output_image_link(self, m):
         """Pass through rest role."""
@@ -396,8 +438,8 @@ class M2R(mistune.Markdown):
 
 class M2RParser(rst.Parser, object):
     def parse(self, inputstring, document):
-        converter = M2R()
-        # super failes in python 2 since rst.Parser is not inheritting object
+        config = document.settings.env.config
+        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
         super(M2RParser, self).parse(converter(inputstring), document)
 
 
@@ -454,7 +496,8 @@ class MdInclude(rst.Directive):
             raise self.severe('Problem with "%s" directive:\n%s' %
                               (self.name, ErrorString(error)))
 
-        converter = M2R()
+        config = self.state.document.settings.env.config
+        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
                                                   convert_whitespace=True)
@@ -466,19 +509,9 @@ def setup(app):
     """When used for spinx extension."""
     global _is_sphinx
     _is_sphinx = True
+    app.add_config_value('no_underscore_emphasis', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
-
-
-# for command-line use
-parser = ArgumentParser()
-options = Namespace()
-parser.add_argument('input_file', nargs='+',
-                    help='files to convert to reST format')
-parser.add_argument('--overwrite', action='store_true', default=False,
-                    help='overwrite output file without confirmaion')
-parser.add_argument('--dry-run', action='store_true', default=False,
-                    help='print conversion result and not save output file')
 
 
 def parse_from_file(file):
@@ -504,7 +537,9 @@ def save_to_file(file, src):
 
 def main():
     # parse cli options
-    parser.parse_known_args(namespace=options)
+    parse_options()
+    if not options.input_file:
+        raise ArgumentError('input files are required')
     for file in options.input_file:
         output = parse_from_file(file)
         if options.dry_run:
