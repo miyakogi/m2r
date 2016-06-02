@@ -432,7 +432,13 @@ class M2R(mistune.Markdown):
         return self.renderer.rest_code_block()
 
     def post_process(self, text):
-        output = text.replace('\\ \n', '\n').replace(' \\ ', ' ').replace('\\  ', ' ')
+        output = (text
+                  .replace('\\ \n', '\n')
+                  .replace('\n\\ ', '\n')
+                  .replace(' \\ ', ' ')
+                  .replace('\\  ', ' ')
+                  .replace('\\ .', '.')
+                  )
         if self.renderer._include_raw_html:
             return prolog + output
         else:

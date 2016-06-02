@@ -80,7 +80,7 @@ class TestInlineMarkdown(RendererTestBase):
     def test_inline_code(self):
         src = '`a`'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ ``a``')
+        self.assertEqual(out.replace('\n', ''), '``a``')
 
     def test_strikethrough(self):
         src = ('~~a~~')
@@ -89,12 +89,12 @@ class TestInlineMarkdown(RendererTestBase):
     def test_emphasis(self):
         src = '*a*'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ *a*')
+        self.assertEqual(out.replace('\n', ''), '*a*')
 
     def test_emphasis_(self):
         src = '_a_'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ *a*')
+        self.assertEqual(out.replace('\n', ''), '*a*')
 
     def test_emphasis_no_(self):
         src = '_a_'
@@ -104,12 +104,12 @@ class TestInlineMarkdown(RendererTestBase):
     def test_double_emphasis(self):
         src = '**a**'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ **a**')
+        self.assertEqual(out.replace('\n', ''), '**a**')
 
     def test_double_emphasis__(self):
         src = '__a__'
         out = self.conv(src)
-        self.assertEqual(out.replace('\n', ''), '\ **a**')
+        self.assertEqual(out.replace('\n', ''), '**a**')
 
     def test_emphasis_no__(self):
         src = '__a__'
@@ -125,7 +125,7 @@ class TestInlineMarkdown(RendererTestBase):
         src = 'this is a [link](http://example.com/).'
         out = self.conv(src)
         self.assertEqual(
-            out, '\nthis is a `link <http://example.com/>`_\ .\n')
+            out, '\nthis is a `link <http://example.com/>`_.\n')
 
     def test_image_link(self):
         src = '[![Alt Text](image_taget_url)](link_target_url)'
@@ -196,7 +196,7 @@ class TestInlineMarkdown(RendererTestBase):
         src = 'this is <s>html</s>.'
         out = self.conv(src)
         self.assertEqual(
-            out, prolog + '\nthis is :raw-html-m2r:`<s>html</s>`\ .\n')
+            out, prolog + '\nthis is :raw-html-m2r:`<s>html</s>`.\n')
 
     def test_block_html(self):
         src = '<h1>title</h1>'
@@ -635,7 +635,7 @@ class TestDirective(RendererTestBase):
             '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + comment + '\n\ ``eoc``\n')
+        self.assertEqual(out, '\n' + comment + '\n``eoc``\n')
 
 
 class TestRestCode(RendererTestBase):
