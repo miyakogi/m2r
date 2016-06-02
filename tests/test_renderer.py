@@ -125,7 +125,7 @@ class TestInlineMarkdown(RendererTestBase):
         src = 'this is a [link](http://example.com/).'
         out = self.conv(src)
         self.assertEqual(
-            out, '\nthis is a \ `link <http://example.com/>`_\ .\n')
+            out, '\nthis is a `link <http://example.com/>`_\ .\n')
 
     def test_image_link(self):
         src = '[![Alt Text](image_taget_url)](link_target_url)'
@@ -156,7 +156,7 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na co:\ ``de``\  and `RefLink <http://example.com>`_ here.\n',
+            '\na co:\ ``de`` and `RefLink <http://example.com>`_ here.\n',
         )
 
     def test_rest_role_incomplete2(self):
@@ -164,39 +164,39 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na `RefLink <http://example.com>`_ and co:\ ``de``\  here.\n',
+            '\na `RefLink <http://example.com>`_ and co:\ ``de`` here.\n',
         )
 
     def test_rest_role_with_code(self):
         src = 'a `code` and :code:`rest` here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na \ ``code``\  and :code:`rest` here.\n')
+        self.assertEqual(out, '\na ``code`` and :code:`rest` here.\n')
 
     def test_code_with_rest_role(self):
         src = 'a :code:`rest` and `code` here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na :code:`rest` and \ ``code``\  here.\n')
+        self.assertEqual(out, '\na :code:`rest` and ``code`` here.\n')
 
     def test_rest_link_with_code(self):
         src = 'a `RefLink <a>`_ and `code` here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na `RefLink <a>`_ and \ ``code``\  here.\n')
+        self.assertEqual(out, '\na `RefLink <a>`_ and ``code`` here.\n')
 
     def test_code_with_rest_link(self):
         src = 'a `code` and `RefLink <a>`_ here.'
         out = self.conv(src)
-        self.assertEqual(out, '\na \ ``code``\  and `RefLink <a>`_ here.\n')
+        self.assertEqual(out, '\na ``code`` and `RefLink <a>`_ here.\n')
 
     def test_inline_math(self):
         src = 'this is `$E = mc^2$` inline math.'
         out = self.conv(src)
-        self.assertEqual(out, '\nthis is \ :math:`E = mc^2`\  inline math.\n')
+        self.assertEqual(out, '\nthis is :math:`E = mc^2` inline math.\n')
 
     def test_inline_html(self):
         src = 'this is <s>html</s>.'
         out = self.conv(src)
         self.assertEqual(
-            out, prolog + '\nthis is \ :raw-html-m2r:`<s>html</s>`\ .\n')
+            out, prolog + '\nthis is :raw-html-m2r:`<s>html</s>`\ .\n')
 
     def test_block_html(self):
         src = '<h1>title</h1>'
@@ -596,8 +596,8 @@ class TestFootNote(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n'.join([
             '',
-            'This is a\ [#fn-1]_\  '
-            'footnote\ [#fn-2]_\  ref\ [#fn-ref]_\  with rst [#a]_.',
+            'This is a\ [#fn-1]_ '
+            'footnote\ [#fn-2]_ ref\ [#fn-ref]_ with rst [#a]_.',
             '',
             '.. [#a] note rst',  # one empty line inserted...
             '',

@@ -423,17 +423,20 @@ class M2R(mistune.Markdown):
 
     def parse(self, text):
         output = super(M2R, self).parse(text)
-        output = output.replace('\\ \n', '\n')
-        if self.renderer._include_raw_html:
-            return prolog + output
-        else:
-            return output
+        return self.post_process(output)
 
     def output_directive(self):
         return self.renderer.directive(self.token['text'])
 
     def output_rest_code_block(self):
         return self.renderer.rest_code_block()
+
+    def post_process(self, text):
+        output = text.replace('\\ \n', '\n').replace(' \\ ', ' ').replace('\\  ', ' ')
+        if self.renderer._include_raw_html:
+            return prolog + output
+        else:
+            return output
 
 
 class M2RParser(rst.Parser, object):
