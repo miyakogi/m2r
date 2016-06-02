@@ -3,6 +3,14 @@ Version 0.2
 
 (next version)
 
+Version 0.1.3 (2016-06-02)
+--------------------------
+
+* Remove extra escaped-spaces ('\ ')
+    * before and after normal spaces
+    * at the beginning of lines
+    * before dots
+
 Version 0.1.2 (2016-06-01)
 --------------------------
 
