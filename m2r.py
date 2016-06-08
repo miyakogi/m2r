@@ -82,7 +82,7 @@ class RestInlineGrammar(mistune.InlineGrammar):
     image_link = re.compile(
         r'\[!\[(?P<alt>.*?)\]\((?P<url>.*?)\).*\]\((?P<target>.*?)\)'
     )
-    rest_role = re.compile(r':.*?:`.*?`')
+    rest_role = re.compile(r':.*?:`.*?`|`[^`]+`:.*?:')
     rest_link = re.compile(r'`[^`]*?`_')
     inline_math = re.compile(r'`\$(.*)?\$`')
     eol_literal_marker = re.compile(r'(\s+)?::\s*$')

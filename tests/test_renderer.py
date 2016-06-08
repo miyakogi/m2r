@@ -141,6 +141,11 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n' + src + '\n')
 
+    def test_rest_role2(self):
+        src = 'a `some code`:code: inline.'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
     def test_rest_link(self):
         src = 'a `RefLink <http://example.com>`_ here.'
         out = self.conv(src)
@@ -148,6 +153,11 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_rest_link_and_role(self):
         src = 'a :code:`a` and `RefLink <http://example.com>`_ here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\n' + src + '\n')
+
+    def test_rest_link_and_role2(self):
+        src = 'a `a`:code: and `RefLink <http://example.com>`_ here.'
         out = self.conv(src)
         self.assertEqual(out, '\n' + src + '\n')
 
@@ -172,10 +182,20 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\na ``code`` and :code:`rest` here.\n')
 
+    def test_rest2_role_with_code(self):
+        src = 'a `code` and `rest`:code: here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na ``code`` and `rest`:code: here.\n')
+
     def test_code_with_rest_role(self):
         src = 'a :code:`rest` and `code` here.'
         out = self.conv(src)
         self.assertEqual(out, '\na :code:`rest` and ``code`` here.\n')
+
+    def test_code_with_rest_role2(self):
+        src = 'a `rest`:code: and `code` here.'
+        out = self.conv(src)
+        self.assertEqual(out, '\na `rest`:code: and ``code`` here.\n')
 
     def test_rest_link_with_code(self):
         src = 'a `RefLink <a>`_ and `code` here.'
