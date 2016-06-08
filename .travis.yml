@@ -7,10 +7,8 @@ python:
   - 3.5
 
 install:
-  - pip install coverage sphinx
+  - pip install -r requirements/test.txt
   - pip install .
-  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install mock; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == pypy ]]; then pip install mock; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3.5* ]]; then pip install codecov coveralls; fi
 script:
   - coverage erase
