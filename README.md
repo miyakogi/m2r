@@ -125,8 +125,10 @@ in the markdown file, please use `.. mdinclude:: file` instead.
 
 ## Restrictions
 
-* In the reST's directive, markdown is not available. Please write in reST.
-* Column alignment of tables is not supported (reST does not support this feature)
+* In the reST's directives, markdown is not available. Please write in reST.
+* Column alignment of tables is not supported. (reST does not support this feature)
+* Heading with overline-and-underline is not supported.
+  * Heading with underline is OK
 
 If you find any bug or unexpected behaviour, please report it to
 [Issues](https://github.com/miyakogi/m2r/issues).
