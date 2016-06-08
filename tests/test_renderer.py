@@ -620,6 +620,11 @@ class TestDirective(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n.. a\n')
 
+    def test_comment_indented(self):
+        src = '    .. a'
+        out = self.conv(src)
+        self.assertEqual(out, '\n    .. a\n')
+
     def test_comment_newline(self):
         src = '..\n\n   comment\nnewline'
         out = self.conv(src)

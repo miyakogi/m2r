@@ -38,7 +38,11 @@ def parse_options():
 
 class RestBlockGrammar(mistune.BlockGrammar):
     directive = re.compile(
-            r'^(\.\.\s+.*?)\n(?=\S)',
+            r'^( *\.\..*?)\n(?=\S)',
+            re.DOTALL | re.MULTILINE,
+        )
+    oneline_directive = re.compile(
+            r'^( *\.\..*?)$',
             re.DOTALL | re.MULTILINE,
         )
     rest_code_block = re.compile(
@@ -51,10 +55,18 @@ class RestBlockLexer(mistune.BlockLexer):
     grammar_class = RestBlockGrammar
     default_rules = [
         'directive',
+        'oneline_directive',
         'rest_code_block',
     ] + mistune.BlockLexer.default_rules
 
     def parse_directive(self, m):
+        self.tokens.append({
+            'type': 'directive',
+            'text': m.group(1),
+        })
+
+    def parse_oneline_directive(self, m):
+        # reuse directive output
         self.tokens.append({
             'type': 'directive',
             'text': m.group(1),
