@@ -56,6 +56,46 @@ m2r your_document.md [your_document2.md ...]
 
 Then you will find `your_document.rst` in the same directory.
 
+### Programmatic Use
+
+Instantiate `M2R` class and call with markdown text. Then it will return converted text.
+
+```python
+from m2r import M2R
+m2r = M2R()
+rest = m2r('# Title\n\nSentence.')
+print(rest)
+# Title
+# =====
+#
+# Sentence.
+```
+
+Or, use `parse_from_file` function to load markdown file and obtain converted text.
+
+```python
+from m2r import parse_from_file
+output = parse_from_file('markdown_file.md')
+```
+
+This is an example of setup.py to write README in markdown, and publish it to PyPI as reST format.
+
+```python
+readme_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')
+try:
+    from m2r import parse_from_file
+    readme = parse_from_file(readme_file)
+except ImportError:
+    # m2r may not be installed in user environment
+    with open(readme_file) as f:
+        readme = f.read()
+setup(
+    ...,
+    long_description=readme,
+    ...,
+)
+```
+
 ### Sphinx Integration
 
 In your conf.py, add the following lines.
