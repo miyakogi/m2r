@@ -300,7 +300,11 @@ class RestRenderer(mistune.Renderer):
         if '``' not in text:
             return '\ ``{}``\ '.format(text)
         else:
-            return self._raw_html('<code>{}</code>'.format(text.replace('`', '&#96;')))
+            # actually, docutils split spaces in literal
+            return self._raw_html(
+                '<code class="docutils literal">'
+                '<span class="pre">{}</span>'
+                '</code>'.format(text.replace('`', '&#96;')))
 
     def linebreak(self):
         """Rendering line break like ``<br>``."""

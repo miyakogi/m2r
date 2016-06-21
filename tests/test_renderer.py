@@ -88,7 +88,8 @@ class TestInlineMarkdown(RendererTestBase):
         self.assertEqual(out.strip(),
                          '.. role:: raw-html-m2r(raw)\n'
                          '   :format: html\n\n\n'
-                         ':raw-html-m2r:`<code>a&#96;&#96;a</code>`'
+                         ':raw-html-m2r:`<code class="docutils literal">'
+                         '<span class="pre">a&#96;&#96;a</span></code>`'
                          )
 
     def test_strikethrough(self):
