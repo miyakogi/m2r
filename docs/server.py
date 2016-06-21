@@ -18,7 +18,7 @@ server = Server()
 server.watch('*.py', cmd)
 server.watch('../*.py', cmd)
 server.watch('*.md', cmd)
-server.watch('../README.md', cmd)
+server.watch('../*.md', cmd)
 server.watch('_static/*.css', cmd)
 server.watch('_templates/*.html', cmd)
 
