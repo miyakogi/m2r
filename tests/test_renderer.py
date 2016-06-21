@@ -82,6 +82,15 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out.replace('\n', ''), '``a``')
 
+    def test_inline_code_with_backticks(self):
+        src = '```a``a```'
+        out = self.conv(src)
+        self.assertEqual(out.strip(),
+                         '.. role:: raw-html-m2r(raw)\n'
+                         '   :format: html\n\n\n'
+                         ':raw-html-m2r:`<code>a&#96;&#96;a</code>`'
+                         )
+
     def test_strikethrough(self):
         src = ('~~a~~')
         self.conv(src)

@@ -297,7 +297,10 @@ class RestRenderer(mistune.Renderer):
 
         :param text: text content for inline code.
         """
-        return '\ ``{}``\ '.format(text)
+        if '``' not in text:
+            return '\ ``{}``\ '.format(text)
+        else:
+            return self._raw_html('<code>{}</code>'.format(text.replace('`', '&#96;')))
 
     def linebreak(self):
         """Rendering line break like ``<br>``."""
