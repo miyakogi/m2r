@@ -367,8 +367,6 @@ class RestRenderer(mistune.Renderer):
 
         :param html: text content of the html snippet.
         """
-        if self.options.get('escape'):
-            html = escape(html)
         return self._raw_html(html)
 
     def newline(self):
