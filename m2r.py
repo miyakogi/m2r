@@ -80,7 +80,7 @@ class RestBlockLexer(mistune.BlockLexer):
 
 class RestInlineGrammar(mistune.InlineGrammar):
     image_link = re.compile(
-        r'\[!\[(?P<alt>.*?)\]\((?P<url>.*?)\).*\]\((?P<target>.*?)\)'
+        r'\[!\[(?P<alt>.*?)\]\((?P<url>.*?)\).*?\]\((?P<target>.*?)\)'
     )
     rest_role = re.compile(r':.*?:`.*?`|`[^`]+`:.*?:')
     rest_link = re.compile(r'`[^`]*?`_')
