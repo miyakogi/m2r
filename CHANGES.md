@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.6 (2017-05-31)
+
+* Drop python 3.3 support
+
 ### Version 0.1.5 (2016-06-21)
 
 * Support multiple backticks in inline code, like: ```backticks (``) in code```
