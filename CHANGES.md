@@ -5,6 +5,7 @@
 ### Version 0.1.6 (2017-05-31)
 
 * Drop python 3.3 support
+* Improve image_link regex (PR #3)
 
 ### Version 0.1.5 (2016-06-21)
 
