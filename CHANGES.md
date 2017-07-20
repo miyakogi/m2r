@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.7 (2017-07-20)
+
+* Fix undefined name error (PR #5).
+
 ### Version 0.1.6 (2017-05-31)
 
 * Drop python 3.3 support
