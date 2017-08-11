@@ -6,7 +6,8 @@ Source code is [here](https://github.com/miyakogi/m2r/blob/master/docs/example.m
 ## Basic Markups (inline)
 
 A **strong**, *emphasis*, ~~deleted~~, `code with single-backtick`,
-``code with two-backticks``, :code:`reST's code role`, and <del>inline html</del>delete.
+``code with two-backticks``, ```code can include multiple (``) backticks```,
+:code:`reST's code role`, and <del>inline html</del>delete.
 
 ### Link
 

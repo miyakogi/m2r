@@ -604,7 +604,7 @@ div.sphinxsidebarwrapper h1.logo {
 }
 
 div.sphinxsidebarwrapper h1.logo > a {
-    color: #333;
+    color: inherit;
 }
 
 div.sphinxsidebarwrapper h1.logo-name {

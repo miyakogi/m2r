@@ -4,9 +4,10 @@ Contents
 --------
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     example
+    changes
 
 Indices and tables
 ==================

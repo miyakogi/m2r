@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>M2R &mdash; M2R 0.1.4 documentation</title>
+    <title>M2R &mdash; M2R 0.1.7 documentation</title>
     
     <link rel="stylesheet" href="_static/slex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.4',
+        VERSION:     '0.1.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,8 +24,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="M2R 0.1.4 documentation" href="#" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="M2R 0.1.7 documentation" href="#" />
     <link rel="next" title="Example" href="example.html" />
   <!-- font -->
   <link href='https://fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
@@ -68,6 +70,7 @@
 <h3>Contents</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
 </ul>
 
 
@@ -100,16 +103,17 @@
 <h1>M2R<a class="headerlink" href="#m2r" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/m2r"><img alt="PyPI" src="https://img.shields.io/pypi/v/m2r.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/m2r"><img alt="PyPI version" src="https://img.shields.io/pypi/pyversions/m2r.svg" /></a>
+<a class="reference external image-reference" href="https://miyakogi.github.io/m2r"><img alt="Documentation" src="https://img.shields.io/badge/docs-latest-brightgreen.svg" /></a>
 <a class="reference external image-reference" href="https://travis-ci.org/miyakogi/m2r"><img alt="Build Status" src="https://travis-ci.org/miyakogi/m2r.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/miyakogi/m2r"><img alt="codecov" src="https://codecov.io/gh/miyakogi/m2r/branch/master/graph/badge.svg" /></a>
 <hr class="docutils" />
 <p>M2R converts a markdown file including reST markups to a valid reST format.</p>
 <div class="section" id="why-another-converter">
 <h2>Why another converter?<a class="headerlink" href="#why-another-converter" title="Permalink to this headline">¶</a></h2>
-<p>I wanted to write sphinx document in markdown, since it&#8217;s widely used now and
+<p>I wanted to write sphinx document in markdown, since it’s widely used now and
 easy to write code blocks and lists. However, converters using pandoc or
 recommonmark do not support many reST markups and sphinx extensions. For
-example, reST&#8217;s reference link like <code class="docutils literal"><span class="pre">see</span> <span class="pre">`ref`_</span></code> (this is very convenient in
+example, reST’s reference link like <code class="docutils literal"><span class="pre">see</span> <span class="pre">`ref`_</span></code> (this is very convenient in
 long document in which same link appears multiple times) will be converted to
 a code block in HTML like <code class="docutils literal"><span class="pre">see</span> <span class="pre">&lt;code&gt;ref&lt;/code&gt;_</span></code>, which is not expected.</p>
 </div>
@@ -140,7 +144,7 @@ a code block in HTML like <code class="docutils literal"><span class="pre">see</
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Python 2.7 or Python 3.3+ is required.</p>
+<p>Python 2.7 or Python 3.4+ is required.</p>
 <div class="highlight-guess"><div class="highlight"><pre><span></span>pip install m2r
 </pre></div>
 </div>
@@ -174,7 +178,7 @@ a code block in HTML like <code class="docutils literal"><span class="pre">see</
 </pre></div>
 </div>
 <p>This is an example of setup.py to write README in markdown, and publish it to PyPI as reST format.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">readme_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)),</span> <span class="s1">&#39;README.md&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">readme_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;README.md&#39;</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">m2r</span> <span class="kn">import</span> <span class="n">parse_from_file</span>
     <span class="n">readme</span> <span class="o">=</span> <span class="n">parse_from_file</span><span class="p">(</span><span class="n">readme_file</span><span class="p">)</span>
@@ -217,8 +221,12 @@ in the markdown file, please use <code class="docutils literal"><span class="pre
 <div class="section" id="restrictions">
 <h2>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>In the reST&#8217;s directive, markdown is not available. Please write in reST.</li>
-<li>Column alignment of tables is not supported (reST does not support this feature)</li>
+<li>In the reST’s directives, markdown is not available. Please write in reST.</li>
+<li>Column alignment of tables is not supported. (reST does not support this feature)</li>
+<li>Heading with overline-and-underline is not supported.<ul>
+<li>Heading with underline is OK</li>
+</ul>
+</li>
 </ul>
 <p>If you find any bug or unexpected behaviour, please report it to
 <a class="reference external" href="https://github.com/miyakogi/m2r/issues">Issues</a>.</p>
@@ -227,7 +235,7 @@ in the markdown file, please use <code class="docutils literal"><span class="pre
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference external" href="https://miyakogi.github.io/m2r/example.html">example document</a> and <a class="reference external" href="https://github.com/miyakogi/m2r/blob/master/docs/example.md">its
 source code</a>.</p>
-<p>I&#8217;m using m2r for writing user guide of <a class="reference external" href="https://github.com/miyakogi/wdom">WDOM</a>.
+<p>I’m using m2r for writing user guide of <a class="reference external" href="https://github.com/miyakogi/wdom">WDOM</a>.
 So you can see it as another example. Its <a class="reference external" href="http://wdom-py.readthedocs.io/en/latest/guide/index.html">HTML is
 here</a>, and <a class="reference external" href="https://github.com/miyakogi/wdom/tree/dev/docs/guide">its
 source code is here</a>.</p>
@@ -237,7 +245,7 @@ source code is here</a>.</p>
 <p>m2r is written as an extension of
 <a class="reference external" href="http://mistune.readthedocs.io/en/latest/">mistune</a>, which is highly extensible
 pure-python markdown parser.
-Without the mistune, I couldn&#8217;t write this. Thank you!</p>
+Without the mistune, I couldn’t write this. Thank you!</p>
 </div>
 <div class="section" id="licence">
 <h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
@@ -247,12 +255,8 @@ Without the mistune, I couldn&#8217;t write this. Thank you!</p>
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="example.html#basic-markups-inline">Basic Markups (inline)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="example.html#basic-markups-block">Basic Markups (block)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="example.html#extensions">Extensions</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
 </ul>
 </div>
 </div>
@@ -274,11 +278,11 @@ Without the mistune, I couldn&#8217;t write this. Thank you!</p>
     &copy;2016, Hiroyuki Takagi.
     
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
       
     
       |
-      <a href="_sources/index.txt" rel="nofollow">Page source</a>
+      <a href="_sources/index.md.txt" rel="nofollow">Page source</a>
   </div>
 
   
