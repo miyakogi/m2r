@@ -21,7 +21,7 @@ install_requires = ['mistune', 'docutils']
 setup(
     name='m2r',
     version='0.1.7',
-    description='Markdown to reStructuredText converter',
+    description='Markdown and reStructuredText in a single file.',
     long_description=readme,
     author='Hiroyuki Takagi',
     author_email='miyako.dev@gmail.com',
@@ -32,8 +32,10 @@ setup(
     include_package_data=True,
     license="MIT",
     zip_safe=False,
+    keywords='Markdown reStructuredText sphinx-extension',
     classifiers=[
         'Development Status :: 4 - Beta',
+        'Framework :: Sphinx :: Extension',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -43,6 +45,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Topic :: Text Processing',
     ],
     install_requires=install_requires,
 )

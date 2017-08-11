@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.8 (2017-08-11)
+
+* Update metadata on setup.py
+
 ### Version 0.1.7 (2017-07-20)
 
 * Fix undefined name error (PR #5).
