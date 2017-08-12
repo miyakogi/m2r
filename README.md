@@ -9,14 +9,15 @@ M2R
 
 --------------------------------------------------------------------------------
 
-M2R converts a markdown file including reST markups to a valid reST format.
+M2R converts a markdown file including reStructuredText (rst) markups to a valid
+rst format.
 
 ## Why another converter?
 
 I wanted to write sphinx document in markdown, since it's widely used now and
 easy to write code blocks and lists. However, converters using pandoc or
-recommonmark do not support many reST markups and sphinx extensions. For
-example, reST's reference link like ``see `ref`_`` (this is very convenient in
+recommonmark do not support many rst markups and sphinx extensions. For
+example, rst's reference link like ``see `ref`_`` (this is very convenient in
 long document in which same link appears multiple times) will be converted to
 a code block in HTML like `see <code>ref</code>_`, which is not expected.
 
@@ -27,7 +28,7 @@ a code block in HTML like `see <code>ref</code>_`, which is not expected.
     * fenced-code block
     * tables
     * footnotes (``[^1]``)
-* Inline- and Block-level reST markups
+* Inline- and Block-level rst markups
     * single- and multi-line directives (`.. directive::`)
     * inline-roles (``:code:`print(1)` ...``)
     * ref-link (``see `ref`_``)
@@ -35,7 +36,9 @@ a code block in HTML like `see <code>ref</code>_`, which is not expected.
     * math extension inspired by [recommonmark](https://recommonmark.readthedocs.io/en/latest/index.html)
 * Sphinx extension
     * add markdown support for sphinx
-    * ``mdinclude`` directive to include markdown from md or reST files
+    * ``mdinclude`` directive to include markdown from md or rst files
+* Pure python implementation
+    * pandoc is not required
 
 ## Installation
 
@@ -45,11 +48,17 @@ Python 2.7 or Python 3.4+ is required.
 pip install m2r
 ```
 
+Or,
+
+```
+python3 -m pip install m2r
+```
+
 ## Usage
 
 ### Command Line
 
-`m2r` command converts markdown file to reST format.
+`m2r` command converts markdown file to rst format.
 
 ```
 m2r your_document.md [your_document2.md ...]
@@ -59,7 +68,8 @@ Then you will find `your_document.rst` in the same directory.
 
 ### Programmatic Use
 
-Instantiate `M2R` class and call with markdown text. Then it will return converted text.
+Instantiate `M2R` class and call with markdown text. Then it will return
+converted text.
 
 ```python
 from m2r import M2R
@@ -72,14 +82,16 @@ print(rest)
 # Sentence.
 ```
 
-Or, use `parse_from_file` function to load markdown file and obtain converted text.
+Or, use `parse_from_file` function to load markdown file and obtain converted
+text.
 
 ```python
 from m2r import parse_from_file
 output = parse_from_file('markdown_file.md')
 ```
 
-This is an example of setup.py to write README in markdown, and publish it to PyPI as reST format.
+This is an example of setup.py to write README in markdown, and publish it to
+PyPI as rst format.
 
 ```python
 readme_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')
@@ -114,7 +126,7 @@ source_suffix = ['.rst', '.md']
 Write index.md and run `make html`.
 
 When `m2r` extension is enabled on sphinx and `.md` file is loaded, m2r
-converts to reST and pass to sphinx, not making new `.rst` file.
+converts to rst and pass to sphinx, not making new `.rst` file.
 
 #### mdinclude directive
 
@@ -126,8 +138,8 @@ in the markdown file, please use `.. mdinclude:: file` instead.
 
 ## Restrictions
 
-* In the reST's directives, markdown is not available. Please write in reST.
-* Column alignment of tables is not supported. (reST does not support this feature)
+* In the rst's directives, markdown is not available. Please write in rst.
+* Column alignment of tables is not supported. (rst does not support this feature)
 * Heading with overline-and-underline is not supported.
   * Heading with underline is OK
 
