@@ -4,7 +4,7 @@
 from __future__ import print_function, unicode_literals
 import os
 import re
-from argparse import ArgumentParser, Namespace, ArgumentError
+from argparse import ArgumentParser, Namespace
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
@@ -564,10 +564,10 @@ def save_to_file(file, src):
 
 
 def main():
-    # parse cli options
-    parse_options()
+    parse_options()  # parse cli options
     if not options.input_file:
-        raise ArgumentError('input files are required')
+        parser.print_help()
+        parser.exit(0)
     for file in options.input_file:
         output = parse_from_file(file)
         if options.dry_run:

@@ -6,6 +6,7 @@ import os
 from os import path
 from copy import copy
 from unittest import TestCase
+import subprocess
 
 from m2r import parse_from_file, main, options
 
@@ -36,6 +37,19 @@ class TestConvert(TestCase):
         sys.argv = self._orig_argv
         with open(test_rst, 'w') as f:
             f.write(self._orig_rst)
+
+    def test_no_file(self):
+        p = subprocess.Popen(
+            [sys.executable, '-m', 'm2r'],
+            stdout=subprocess.PIPE,
+        )
+        p.wait()
+        self.assertEqual(p.returncode, 0)
+        with p.stdout as buffer:
+            message = buffer.read().decode()
+        self.assertIn('usage', message)
+        self.assertIn('underscore-emphasis', message)
+        self.assertIn('optional arguments:', message)
 
     def test_parse_file(self):
         output = parse_from_file(test_md)
