@@ -20,7 +20,7 @@ install_requires = ['mistune', 'docutils']
 
 setup(
     name='m2r',
-    version='0.1.8',
+    version='0.1.9',
     description='Markdown and reStructuredText in a single file.',
     long_description=readme,
     author='Hiroyuki Takagi',
