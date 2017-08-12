@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.9 (2017-08-12)
+
+* Print help when input_file is not specified on command-line
+
 ### Version 0.1.8 (2017-08-11)
 
 * Update metadata on setup.py
