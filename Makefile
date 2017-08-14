@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build help
+.PHONY: release release-pypi release-github clean clean-test clean-pyc clean-build help
 .DEFAULT_GOAL := help
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -51,6 +51,14 @@ clean-cov: ## remove test and coverage artifacts
 clean-testdoc: ## remove test and coverage artifacts
 	@echo "Remove testdoc output files (testdo/_build/html)."
 	@rm -rf testdoc/_build/html
+
+release: release-pypi release-github  ## register PyPI and send tags to github
+
+release-pypi:  ## register PyPI
+	python setup.py sdist upload
+
+release-github:  ## send tags to github
+	git push origin --tags
 
 .PHONY: green green-cov green-single
 green:  ## run green test
