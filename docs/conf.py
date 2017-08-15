@@ -120,7 +120,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'slex'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -132,6 +132,10 @@ html_theme_options = {
     'github_banner': True,
     'github_type': 'mark',
     'github_count': False,
+    'font_family': '"Charis SIL", "Noto Serif", serif',
+    'head_font_family': 'Lato, sans-serif',
+    'code_font_family': '"Code new roman", "Ubuntu Mono", monospace',
+    'code_font_size': '1rem',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
