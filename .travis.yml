@@ -18,7 +18,8 @@ before_script:
 script:
   - coverage erase
   - make clean
-  - cd testdoc
+  - mkdir tmp
+  - cd tmp
   - coverage run -m unittest discover ../tests
   - rm -rf _build/html
   - coverage run -a -m sphinx -b html -d _build/toctree -E -W . _build/html
