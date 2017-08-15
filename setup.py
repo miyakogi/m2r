@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 from os import path
 
 try:
@@ -17,6 +18,9 @@ except ImportError:
         readme = f.read()
 
 install_requires = ['mistune', 'docutils']
+test_requirements = ['pygments']
+if sys.version_info < (3, 3):
+    test_requirements.append('mock')
 
 setup(
     name='m2r',
@@ -27,7 +31,6 @@ setup(
     author_email='miyako.dev@gmail.com',
     url='https://github.com/miyakogi/m2r',
     py_modules=['m2r'],
-    packages=['tests'],
     entry_points={'console_scripts': 'm2r = m2r:main'},
     include_package_data=True,
     license="MIT",
@@ -48,4 +51,7 @@ setup(
         'Topic :: Text Processing',
     ],
     install_requires=install_requires,
+    test_suite='tests',
+    tests_require=test_requirements,
+
 )

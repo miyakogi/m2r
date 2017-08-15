@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.10 (2017-08-15)
+
+* Include CHANGES and test files in source distribution
+
 ### Version 0.1.9 (2017-08-12)
 
 * Print help when input_file is not specified on command-line

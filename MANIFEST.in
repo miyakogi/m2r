@@ -1,2 +1,7 @@
 include README.md
 include LICENSE
+include CHANGES.md
+
+recursive-include tests *.py test.md test.rst
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
