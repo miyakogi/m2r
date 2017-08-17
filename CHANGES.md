@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.11 (next version)
+
+* Add metadata for sphinx
+
 ### Version 0.1.10 (2017-08-15)
 
 * Include CHANGES and test files in source distribution
