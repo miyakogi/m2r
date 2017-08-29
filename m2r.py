@@ -12,7 +12,7 @@ from docutils.core import ErrorString
 from docutils.utils import SafeString
 import mistune
 
-__version__ = '0.1.10'
+__version__ = '0.1.11'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
