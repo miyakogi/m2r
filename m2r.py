@@ -548,12 +548,16 @@ def setup(app):
     return metadata
 
 
-def parse_from_file(file):
+def convert(text, **kwargs):
+    return M2R(**kwargs)(text)
+
+
+def parse_from_file(file, **kwargs):
     if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
     with open(file) as f:
         src = f.read()
-    output = M2R()(src)
+    output = convert(src, **kwargs)
     return output
 
 

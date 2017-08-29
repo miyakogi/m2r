@@ -5,6 +5,7 @@
 ### Version 0.1.11 (next version)
 
 * Add metadata for sphinx
+* Add `convert(src)` function, which is shortcut of `m2r.M2R()(src)`
 
 ### Version 0.1.10 (2017-08-15)
 

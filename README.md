@@ -68,14 +68,13 @@ Then you will find `your_document.rst` in the same directory.
 
 ### Programmatic Use
 
-Instantiate `M2R` class and call with markdown text. Then it will return
-converted text.
+Import `m2r.convert` function and call it with markdown text.
+Then it will return converted text.
 
 ```python
-from m2r import M2R
-m2r = M2R()
-rest = m2r('# Title\n\nSentence.')
-print(rest)
+from m2r import convert
+rst = convert('# Title\n\nSentence.')
+print(rst)
 # Title
 # =====
 #
