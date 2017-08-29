@@ -77,10 +77,9 @@ green-cov:  # run green and calculate coverage
 flake8:  ## run flake8 syntax check
 	flake8 setup.py m2r.py tests
 
-# -n option is better but type hints refs are not found
 .PHONY: docs
 docs:  ## build document
-	@sphinx-build -E -W -n -b html docs docs/_build/html
+	@sphinx-build -E -W -n -j 4 -b html docs docs/_build/html
 
 .PHONY: sphinx
 sphinx:  ## run document build server

@@ -23,7 +23,7 @@ script:
   - coverage run -m unittest discover ../tests
   - cd ../docs
   - rm -rf _build/html
-  - coverage run -a -m sphinx -b html -d _build/toctree -E -W . _build/html
+  - coverage run -a -m sphinx -b html -d _build/toctree -E -W -n -j 2 . _build/html
   - rm -rf _build/html
   - coverage report --include="*m2r.py,*m2r/tests*"
   - cp -f .coverage ../

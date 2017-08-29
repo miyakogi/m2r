@@ -6,13 +6,12 @@ from unittest import TestCase, skip
 from docutils.core import Publisher
 from docutils import io
 
-from m2r import prolog, M2R
+from m2r import prolog, convert
 
 
 class RendererTestBase(TestCase):
     def conv(self, src, **kwargs):
-        self.md = M2R(**kwargs)
-        out = self.md(src)
+        out = convert(src, **kwargs)
         self.check_rst(out)
         return out
 

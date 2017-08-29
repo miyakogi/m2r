@@ -68,14 +68,13 @@ Then you will find `your_document.rst` in the same directory.
 
 ### Programmatic Use
 
-Instantiate `M2R` class and call with markdown text. Then it will return
-converted text.
+Import `m2r.convert` function and call it with markdown text.
+Then it will return converted text.
 
 ```python
-from m2r import M2R
-m2r = M2R()
-rest = m2r('# Title\n\nSentence.')
-print(rest)
+from m2r import convert
+rst = convert('# Title\n\nSentence.')
+print(rst)
 # Title
 # =====
 #
@@ -155,6 +154,13 @@ I'm using m2r for writing user guide of [WDOM](https://github.com/miyakogi/wdom)
 So you can see it as another example. Its [HTML is
 here](http://wdom-py.readthedocs.io/en/latest/guide/index.html), and [its
 source code is here](https://github.com/miyakogi/wdom/tree/dev/docs/guide).
+
+### Demo editor
+
+Demo editor of m2r is available.
+If you are interested in m2r, please try it.
+
+[https://github.com/miyakogi/m2rdemo](https://github.com/miyakogi/m2rdemo)
 
 ## Acknowledgement
 

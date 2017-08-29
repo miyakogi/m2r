@@ -12,7 +12,7 @@ from docutils.core import ErrorString
 from docutils.utils import SafeString
 import mistune
 
-
+__version__ = '0.1.11'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
@@ -540,14 +540,24 @@ def setup(app):
     app.add_config_value('no_underscore_emphasis', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
+    metadata = dict(
+        version=__version__,
+        parallel_read_safe=True,
+        parallel_write_safe=True,
+    )
+    return metadata
 
 
-def parse_from_file(file):
+def convert(text, **kwargs):
+    return M2R(**kwargs)(text)
+
+
+def parse_from_file(file, **kwargs):
     if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
     with open(file) as f:
         src = f.read()
-    output = M2R()(src)
+    output = convert(src, **kwargs)
     return output
 
 
