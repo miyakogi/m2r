@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.12 (2017-09-11)
+
+* Support multi byte characters for heading
+
 ### Version 0.1.11 (2017-08-30)
 
 * Add metadata for sphinx
