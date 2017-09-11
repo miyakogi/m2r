@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function, unicode_literals
+
 from unittest import TestCase, skip
 
 from docutils.core import Publisher
@@ -337,6 +339,11 @@ class TestHeading(RendererTestBase):
         src = '# head 1'
         out = self.conv(src)
         self.assertEqual(out, '\nhead 1\n' + '=' * 6 + '\n')
+
+    def test_heading_multibyte(self):
+        src = '# マルチバイト文字\n'
+        out = self.conv(src)
+        self.assertEqual(out, '\nマルチバイト文字\n' + '=' * 16 + '\n')
 
 
 class TestList(RendererTestBase):

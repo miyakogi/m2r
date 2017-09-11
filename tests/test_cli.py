@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function, unicode_literals
+
 import sys
 import os
 from os import path
@@ -13,6 +15,9 @@ from m2r import parse_from_file, main, options
 if sys.version_info < (3, ):
     from mock import patch
     _builtin = '__builtin__'
+    from codecs import open as _open
+    from functools import partial
+    open = partial(_open, encoding='utf-8')
 else:
     from unittest.mock import patch
     _builtin = 'builtins'

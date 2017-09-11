@@ -4,13 +4,19 @@
 from __future__ import print_function, unicode_literals
 import os
 import re
+import sys
 from argparse import ArgumentParser, Namespace
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
 from docutils.core import ErrorString
-from docutils.utils import SafeString
+from docutils.utils import SafeString, column_width
 import mistune
+
+if sys.version_info < (3, ):
+    from codecs import open as _open
+else:
+    _open = open
 
 __version__ = '0.1.11'
 _is_sphinx = False
@@ -214,7 +220,8 @@ class RestRenderer(mistune.Renderer):
         :param level: a number for the header level, for example: 1.
         :param raw: raw text content of the header.
         """
-        return '\n{0}\n{1}\n'.format(text, self.hmarks[level] * len(text))
+        return '\n{0}\n{1}\n'.format(text,
+                                     self.hmarks[level] * column_width(text))
 
     def hrule(self):
         """Rendering method for ``<hr>`` tag."""
@@ -552,16 +559,16 @@ def convert(text, **kwargs):
     return M2R(**kwargs)(text)
 
 
-def parse_from_file(file, **kwargs):
+def parse_from_file(file, encoding='utf-8', **kwargs):
     if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
-    with open(file) as f:
+    with _open(file, encoding=encoding) as f:
         src = f.read()
     output = convert(src, **kwargs)
     return output
 
 
-def save_to_file(file, src):
+def save_to_file(file, src, encoding='utf-8', **kwargs):
     target = os.path.splitext(file)[0] + '.rst'
     if not options.overwrite and os.path.exists(target):
         confirm = input('{} already exists. overwrite it? [y/n]: '.format(
@@ -569,7 +576,7 @@ def save_to_file(file, src):
         if confirm.upper() not in ('Y', 'YES'):
             print('skip {}'.format(file))
             return
-    with open(target, 'w') as f:
+    with _open(target, 'w', encoding=encoding) as f:
         f.write(src)
 
 
