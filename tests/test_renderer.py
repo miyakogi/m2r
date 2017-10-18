@@ -142,6 +142,15 @@ class TestInlineMarkdown(RendererTestBase):
         self.assertEqual(
             out, '\nthis is a `link <http://example.com/>`_.\n')
 
+    def test_link_with_rel_link_enabled(self):
+        src = 'this is a [link](http://example.com/).'
+        out = self.conv_no_check(
+            src,
+            parse_relative_links=True
+        )
+        self.assertEqual(
+            out, '\nthis is a `link <http://example.com/>`_.\n')
+
     def test_anchor(self):
         src = 'this is an [anchor](#anchor).'
         out = self.conv_no_check(
