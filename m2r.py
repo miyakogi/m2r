@@ -41,6 +41,9 @@ parser.add_argument('--dry-run', action='store_true', default=False,
 parser.add_argument('--no-underscore-emphasis', action='store_true',
                     default=False,
                     help='do not use underscore (_) for emphasis')
+parser.add_argument('--parse-relative-links', action='store_true',
+                    default=False,
+                    help='parse relative links into ref or doc directives')
 
 
 def parse_options():
@@ -185,6 +188,14 @@ class RestRenderer(mistune.Renderer):
         5: '"',
         6: '#',
     }
+
+    def __init__(self, *args, **kwargs):
+        self.parse_relative_links = kwargs.pop('parse_relative_links', False)
+        super(RestRenderer, self).__init__(*args, **kwargs)
+        if not _is_sphinx:
+            parse_options()
+            if options.parse_relative_links:
+                self.parse_relative_links = options.parse_relative_links
 
     def _indent_block(self, block):
         return '\n'.join(self.indent + line if line else ''
@@ -355,7 +366,7 @@ class RestRenderer(mistune.Renderer):
         """
         if title:
             raise NotImplementedError('sorry')
-        if not _is_sphinx:
+        if not self.parse_relative_links:
             return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
         else:
             url_info = urlparse(link)
@@ -507,7 +518,10 @@ class M2R(mistune.Markdown):
 class M2RParser(rst.Parser, object):
     def parse(self, inputstring, document):
         config = document.settings.env.config
-        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
+        converter = M2R(
+            no_underscore_emphasis=config.no_underscore_emphasis,
+            parse_relative_links=config.parse_relative_links
+        )
         super(M2RParser, self).parse(converter(inputstring), document)
 
 
@@ -565,7 +579,10 @@ class MdInclude(rst.Directive):
                               (self.name, ErrorString(error)))
 
         config = self.state.document.settings.env.config
-        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
+        converter = M2R(
+            no_underscore_emphasis=config.no_underscore_emphasis,
+            parse_relative_links=config.parse_relative_links
+        )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
                                                   convert_whitespace=True)
@@ -578,6 +595,7 @@ def setup(app):
     global _is_sphinx
     _is_sphinx = True
     app.add_config_value('no_underscore_emphasis', False, 'env')
+    app.add_config_value('parse_relative_links', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
