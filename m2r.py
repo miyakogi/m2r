@@ -3,6 +3,7 @@
 
 from __future__ import print_function, unicode_literals
 import os
+import os.path
 import re
 import sys
 from argparse import ArgumentParser, Namespace
@@ -15,8 +16,10 @@ import mistune
 
 if sys.version_info < (3, ):
     from codecs import open as _open
+    from urlparse import urlparse
 else:
     _open = open
+    from urllib.parse import urlparse
 
 __version__ = '0.1.12'
 _is_sphinx = False
@@ -352,7 +355,37 @@ class RestRenderer(mistune.Renderer):
         """
         if title:
             raise NotImplementedError('sorry')
-        return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
+        if not _is_sphinx:
+            return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
+        else:
+            url_info = urlparse(link)
+            if url_info.scheme:
+                return '\ `{text} <{target}>`_\ '.format(
+                    target=link,
+                    text=text
+                )
+            else:
+                link_type = 'doc'
+                anchor = url_info.fragment
+                if url_info.fragment:
+                    if url_info.path:
+                        # Can't link to anchors via doc directive.
+                        anchor = ''
+                    else:
+                        # Example: [text](#anchor)
+                        link_type = 'ref'
+                doc_link = '{doc_name}{anchor}'.format(
+                    # splitext approach works whether or not path is set. It
+                    # will return an empty string if unset, which leads to
+                    # anchor only ref.
+                    doc_name=os.path.splitext(url_info.path)[0],
+                    anchor=anchor
+                )
+                return '\ :{link_type}:`{text} <{doc_link}>`\ '.format(
+                    link_type=link_type,
+                    doc_link=doc_link,
+                    text=text
+                )
 
     def image(self, src, title, text):
         """Rendering a image with title and text.
