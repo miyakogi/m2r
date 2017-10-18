@@ -15,12 +15,20 @@ Auto link to http://example.com/.
 
 Link to [example.com](http://example.com/) in markdown.
 
+Link to [anchor](#testlabel) in markdown.
+
+Link to [document](example.md) in markdown.
+
+Link to [document with anchor](example.md#testlabel) in markdown.
+
 Link to `example.com <http://example.com/>`_ in reST.
 
 Link to `example`_ in reST_ref.
 
 .. _example: http://example.com
 
+
+.. _testlabel:
 
 ## Basic Markups (block)
 

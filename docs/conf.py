@@ -49,6 +49,7 @@ templates_path = ['_templates']
 # source_suffix = ['.rst', '.md']
 source_suffix = '.md'
 no_underscore_emphasis = True
+m2r_parse_relative_links = True
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
