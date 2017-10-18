@@ -17,6 +17,10 @@ class RendererTestBase(TestCase):
         self.check_rst(out)
         return out
 
+    def conv_no_check(self, src, **kwargs):
+        out = convert(src, **kwargs)
+        return out
+
     def check_rst(self, rst):
         pub = Publisher(reader=None, parser=None, writer=None, settings=None,
                         source_class=io.StringInput,
@@ -140,9 +144,8 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_anchor(self):
         src = 'this is an [anchor](#anchor).'
-        out = self.conv(
+        out = self.conv_no_check(
             src,
-            no_underscore_emphasis=True,
             parse_relative_links=True
         )
         self.assertEqual(
@@ -150,9 +153,8 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_relative_link(self):
         src = 'this is a [relative link](a_file.md).'
-        out = self.conv(
+        out = self.conv_no_check(
             src,
-            no_underscore_emphasis=True,
             parse_relative_links=True
         )
         self.assertEqual(
@@ -160,9 +162,8 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_relative_link_with_anchor(self):
         src = 'this is a [relative link](a_file.md#anchor).'
-        out = self.conv(
+        out = self.conv_no_check(
             src,
-            no_underscore_emphasis=True,
             parse_relative_links=True
         )
         self.assertEqual(

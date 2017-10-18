@@ -37,7 +37,7 @@ a code block in HTML like `see <code>ref</code>_`, which is not expected.
 * Sphinx extension
     * add markdown support for sphinx
     * ``mdinclude`` directive to include markdown from md or rst files
-    * option to parse relative links into ref and doc directives (``parse_relative_links``)
+    * option to parse relative links into ref and doc directives (``m2r_parse_relative_links``)
 * Pure python implementation
     * pandoc is not required
 

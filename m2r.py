@@ -520,7 +520,7 @@ class M2RParser(rst.Parser, object):
         config = document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links
         )
         super(M2RParser, self).parse(converter(inputstring), document)
 
@@ -581,7 +581,7 @@ class MdInclude(rst.Directive):
         config = self.state.document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links
         )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
@@ -595,7 +595,7 @@ def setup(app):
     global _is_sphinx
     _is_sphinx = True
     app.add_config_value('no_underscore_emphasis', False, 'env')
-    app.add_config_value('parse_relative_links', False, 'env')
+    app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
