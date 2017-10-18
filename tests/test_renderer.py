@@ -140,19 +140,31 @@ class TestInlineMarkdown(RendererTestBase):
 
     def test_anchor(self):
         src = 'this is an [anchor](#anchor).'
-        out = self.conv(src, parse_relative_links=True)
+        out = self.conv(
+            src,
+            no_underscore_emphasis=True,
+            parse_relative_links=True
+        )
         self.assertEqual(
             out, '\nthis is an :ref:`anchor <anchor>`.\n')
 
     def test_relative_link(self):
         src = 'this is a [relative link](a_file.md).'
-        out = self.conv(src, parse_relative_links=True)
+        out = self.conv(
+            src,
+            no_underscore_emphasis=True,
+            parse_relative_links=True
+        )
         self.assertEqual(
             out, '\nthis is a :doc:`relative link <a_file>`.\n')
 
     def test_relative_link_with_anchor(self):
         src = 'this is a [relative link](a_file.md#anchor).'
-        out = self.conv(src, parse_relative_links=True)
+        out = self.conv(
+            src,
+            no_underscore_emphasis=True,
+            parse_relative_links=True
+        )
         self.assertEqual(
             out, '\nthis is a :doc:`relative link <a_file>`.\n')
 
