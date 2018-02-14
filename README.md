@@ -141,6 +141,8 @@ in the markdown file, please use `.. mdinclude:: file` instead.
 * Column alignment of tables is not supported. (rst does not support this feature)
 * Heading with overline-and-underline is not supported.
   * Heading with underline is OK
+* Rst heading marks are currently hard-coded and unchangeable.
+  * H1: `=`, H2: `-`, H3: `^`, H4: `~`, H5: `"`, H6: `#`
 
 If you find any bug or unexpected behaviour, please report it to
 [Issues](https://github.com/miyakogi/m2r/issues).
