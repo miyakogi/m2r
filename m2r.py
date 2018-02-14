@@ -18,7 +18,7 @@ if sys.version_info < (3, ):
 else:
     _open = open
 
-__version__ = '0.1.12'
+__version__ = '0.1.13'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
@@ -472,7 +472,11 @@ class M2R(mistune.Markdown):
 
 
 class M2RParser(rst.Parser, object):
-    def parse(self, inputstring, document):
+    def parse(self, inputstrings, document):
+        if isinstance(inputstrings, statemachine.StringList):
+            inputstring = '\n'.join(inputstrings)
+        else:
+            inputstring = inputstrings
         config = document.settings.env.config
         converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
         super(M2RParser, self).parse(converter(inputstring), document)

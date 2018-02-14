@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.13 (2018-02-14)
+
+* Catch up sphinx updates
+
 ### Version 0.1.12 (2017-09-11)
 
 * Support multi byte characters for heading
