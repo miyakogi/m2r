@@ -351,7 +351,11 @@ class RestRenderer(mistune.Renderer):
         :param text: text content for description.
         """
         if title:
-            raise NotImplementedError('sorry')
+            return self._raw_html(
+                '<a href="{link}" title="{title}">{text}</a>'.format(
+                    link=link, title=title, text=text
+                )
+            )
         return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
 
     def image(self, src, title, text):

@@ -19,6 +19,8 @@ Link to `example.com <http://example.com/>`_ in reST.
 
 Link to `example`_ in reST_ref.
 
+Link to [example.com](http://example.com/ "example") with title in markdown.
+
 .. _example: http://example.com
 
 
