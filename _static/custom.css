@@ -2,7 +2,7 @@ div.sphinxsidebarwrapper p.blurb {
   font-family: Lato, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1.logo {
   font-family: Lato, sans-serif;
   font-weight: normal;
 }
@@ -11,46 +11,3 @@ div.sphinxsidebar li.toctree-l1 {
   font-family: Lato, sans-serif;
 }
 
-body {
-  font-family: "Charis SIL", "Noto Serif", serif;
-  font-size: 17px;
-}
-
-pre, .pre {
-  font-family: "Code new roman", "Ubuntu Mono", monospace;
-  font-size: 1em;
-}
-
-code {
-  border-style: none;
-}
-
-.search-btn {
-  padding: 0 1em;
-  font-family: Lato, sans-serif;
-  font-weight: normal;
-  line-height: normal;
-  align-self: stretch;
-}
-
-table.docutils {
-    border-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-table.docutils th.field-name {
-    border-style: none;
-    font-size: 1em;
-}
-
-td.field-body code {
-    margin: 0;
-    padding: 0;
-    border-style: none;
-    font-size: 1em;
-}
-
-a.fn-backref {
-    padding-left: 0.5em;
-}
