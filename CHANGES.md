@@ -2,7 +2,7 @@
 
 (next version)
 
-### Version 0.1.14 (next release)
+### Version 0.1.14 (2018-03-22)
 
 * Implement markdown link with title
 
