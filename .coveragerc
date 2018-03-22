@@ -1,0 +1,2 @@
+[run]
+include=m2r.py,tests/test_*.py

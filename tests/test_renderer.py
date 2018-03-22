@@ -138,6 +138,17 @@ class TestInlineMarkdown(RendererTestBase):
         self.assertEqual(
             out, '\nthis is a `link <http://example.com/>`_.\n')
 
+    def test_link_title(self):
+        src = 'this is a [link](http://example.com/ "example").'
+        out = self.conv(src)
+        self.assertEqual(
+            out,
+            '.. role:: raw-html-m2r(raw)\n'
+            '   :format: html\n\n\n'
+            'this is a :raw-html-m2r:'
+            '`<a href="http://example.com/" title="example">link</a>`.\n'
+        )
+
     def test_image_link(self):
         src = '[![Alt Text](image_taget_url)](link_target_url)'
         out = self.conv(src)
