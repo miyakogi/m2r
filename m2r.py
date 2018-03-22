@@ -18,7 +18,7 @@ if sys.version_info < (3, ):
 else:
     _open = open
 
-__version__ = '0.1.13'
+__version__ = '0.1.14'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
