@@ -2,6 +2,14 @@
 
 (next version)
 
+### Version 0.1.14 (2018-03-22)
+
+* Implement markdown link with title
+
+### Version 0.1.13 (2018-02-14)
+
+* Catch up sphinx updates
+
 ### Version 0.1.12 (2017-09-11)
 
 * Support multi byte characters for heading

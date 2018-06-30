@@ -26,7 +26,7 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-cov clean-testdoc ## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-testdoc ## remove all build, test, coverage and Python artifacts
 
 clean-build: ## remove build artifacts
 	@echo "Remove build files (build/, dist/, .egg*, ...)."
@@ -34,7 +34,7 @@ clean-build: ## remove build artifacts
 	@rm -fr dist/
 	@rm -fr .eggs/
 	@find . -name '*.egg-info' -exec rm -fr {} +
-	@find . -name '*.egg' -exec rm -f {} +
+	@find . -name '*.egg' -exec rm -fr {} +
 
 clean-pyc: ## remove Python file artifacts
 	@echo "Remove python files (*.py[co], __pycache__, ...)."
@@ -42,11 +42,6 @@ clean-pyc: ## remove Python file artifacts
 	@find . -name '*.pyo' -exec rm -f {} +
 	@find . -name '*~' -exec rm -f {} +
 	@find . -name '__pycache__' -exec rm -fr {} +
-
-clean-cov: ## remove test and coverage artifacts
-	@echo "Remove coverage files (.coverage, htmlcov/)."
-	@rm -f .coverage
-	@rm -fr htmlcov/
 
 clean-testdoc: ## remove test and coverage artifacts
 	@echo "Remove testdoc output files (testdo/_build/html)."

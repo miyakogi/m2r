@@ -21,7 +21,7 @@ else:
     _open = open
     from urllib.parse import urlparse
 
-__version__ = '0.1.12'
+__version__ = '0.1.14'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
@@ -365,7 +365,11 @@ class RestRenderer(mistune.Renderer):
         :param text: text content for description.
         """
         if title:
-            raise NotImplementedError('sorry')
+            return self._raw_html(
+                '<a href="{link}" title="{title}">{text}</a>'.format(
+                    link=link, title=title, text=text
+                )
+            )
         if not self.parse_relative_links:
             return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
         else:
@@ -516,7 +520,11 @@ class M2R(mistune.Markdown):
 
 
 class M2RParser(rst.Parser, object):
-    def parse(self, inputstring, document):
+    def parse(self, inputstrings, document):
+        if isinstance(inputstrings, statemachine.StringList):
+            inputstring = '\n'.join(inputstrings)
+        else:
+            inputstring = inputstrings
         config = document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
