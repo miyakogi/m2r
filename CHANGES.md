@@ -2,6 +2,10 @@
 
 (next version)
 
+### Version 0.1.15 (2018-06-30)
+
+* Support Sphinx's doc/ref directives for relative links ([#16](https://github.com/miyakogi/m2r/pull/16))
+
 ### Version 0.1.14 (2018-03-22)
 
 * Implement markdown link with title
