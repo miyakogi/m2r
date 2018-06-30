@@ -3,6 +3,7 @@
 
 from __future__ import print_function, unicode_literals
 import os
+import os.path
 import re
 import sys
 from argparse import ArgumentParser, Namespace
@@ -15,8 +16,10 @@ import mistune
 
 if sys.version_info < (3, ):
     from codecs import open as _open
+    from urlparse import urlparse
 else:
     _open = open
+    from urllib.parse import urlparse
 
 __version__ = '0.1.14'
 _is_sphinx = False
@@ -38,6 +41,9 @@ parser.add_argument('--dry-run', action='store_true', default=False,
 parser.add_argument('--no-underscore-emphasis', action='store_true',
                     default=False,
                     help='do not use underscore (_) for emphasis')
+parser.add_argument('--parse-relative-links', action='store_true',
+                    default=False,
+                    help='parse relative links into ref or doc directives')
 
 
 def parse_options():
@@ -182,6 +188,14 @@ class RestRenderer(mistune.Renderer):
         5: '"',
         6: '#',
     }
+
+    def __init__(self, *args, **kwargs):
+        self.parse_relative_links = kwargs.pop('parse_relative_links', False)
+        super(RestRenderer, self).__init__(*args, **kwargs)
+        if not _is_sphinx:
+            parse_options()
+            if options.parse_relative_links:
+                self.parse_relative_links = options.parse_relative_links
 
     def _indent_block(self, block):
         return '\n'.join(self.indent + line if line else ''
@@ -356,7 +370,37 @@ class RestRenderer(mistune.Renderer):
                     link=link, title=title, text=text
                 )
             )
-        return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
+        if not self.parse_relative_links:
+            return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
+        else:
+            url_info = urlparse(link)
+            if url_info.scheme:
+                return '\ `{text} <{target}>`_\ '.format(
+                    target=link,
+                    text=text
+                )
+            else:
+                link_type = 'doc'
+                anchor = url_info.fragment
+                if url_info.fragment:
+                    if url_info.path:
+                        # Can't link to anchors via doc directive.
+                        anchor = ''
+                    else:
+                        # Example: [text](#anchor)
+                        link_type = 'ref'
+                doc_link = '{doc_name}{anchor}'.format(
+                    # splitext approach works whether or not path is set. It
+                    # will return an empty string if unset, which leads to
+                    # anchor only ref.
+                    doc_name=os.path.splitext(url_info.path)[0],
+                    anchor=anchor
+                )
+                return '\ :{link_type}:`{text} <{doc_link}>`\ '.format(
+                    link_type=link_type,
+                    doc_link=doc_link,
+                    text=text
+                )
 
     def image(self, src, title, text):
         """Rendering a image with title and text.
@@ -482,7 +526,10 @@ class M2RParser(rst.Parser, object):
         else:
             inputstring = inputstrings
         config = document.settings.env.config
-        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
+        converter = M2R(
+            no_underscore_emphasis=config.no_underscore_emphasis,
+            parse_relative_links=config.m2r_parse_relative_links
+        )
         super(M2RParser, self).parse(converter(inputstring), document)
 
 
@@ -540,7 +587,10 @@ class MdInclude(rst.Directive):
                               (self.name, ErrorString(error)))
 
         config = self.state.document.settings.env.config
-        converter = M2R(no_underscore_emphasis=config.no_underscore_emphasis)
+        converter = M2R(
+            no_underscore_emphasis=config.no_underscore_emphasis,
+            parse_relative_links=config.m2r_parse_relative_links
+        )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
                                                   convert_whitespace=True)
@@ -553,6 +603,7 @@ def setup(app):
     global _is_sphinx
     _is_sphinx = True
     app.add_config_value('no_underscore_emphasis', False, 'env')
+    app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
