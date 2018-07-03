@@ -10,6 +10,8 @@ matrix:
       env: TOXENV=py
     - python: 3.6
       env: TOXENV=py,codecov
+    - python: 3.7-dev
+      env: TOXENV=py
     - python: pypy
       env: TOXENV=py
     - python: pypy3
