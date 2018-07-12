@@ -74,7 +74,7 @@ flake8:  ## run flake8 syntax check
 
 .PHONY: docs
 docs:  ## build document
-	@sphinx-build -E -W -n -j 4 -b html docs docs/_build/html
+	@sphinx-build -E -W -n -j auto -b html docs docs/_build/html
 
 .PHONY: sphinx
 sphinx:  ## run document build server
