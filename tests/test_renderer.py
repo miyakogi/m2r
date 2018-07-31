@@ -142,6 +142,12 @@ class TestInlineMarkdown(RendererTestBase):
         self.assertEqual(
             out, '\nthis is a `link <http://example.com/>`_.\n')
 
+    def test_anonymous_link(self):
+        src = 'this is a [link](http://example.com/).'
+        out = self.conv(src, anonymous_references=True)
+        self.assertEqual(
+            out, '\nthis is a `link <http://example.com/>`__.\n')
+
     def test_link_with_rel_link_enabled(self):
         src = 'this is a [link](http://example.com/).'
         out = self.conv_no_check(
@@ -150,6 +156,16 @@ class TestInlineMarkdown(RendererTestBase):
         )
         self.assertEqual(
             out, '\nthis is a `link <http://example.com/>`_.\n')
+
+    def test_anonymous_link_with_rel_link_enabled(self):
+        src = 'this is a [link](http://example.com/).'
+        out = self.conv_no_check(
+            src,
+            parse_relative_links=True,
+            anonymous_references=True
+        )
+        self.assertEqual(
+            out, '\nthis is a `link <http://example.com/>`__.\n')
 
     def test_anchor(self):
         src = 'this is an [anchor](#anchor).'
