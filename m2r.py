@@ -543,7 +543,8 @@ class M2RParser(rst.Parser, object):
         config = document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.m2r_parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links,
+            anonymous_references=config.m2r_anonymous_references,
         )
         super(M2RParser, self).parse(converter(inputstring), document)
 
@@ -604,7 +605,8 @@ class MdInclude(rst.Directive):
         config = self.state.document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.m2r_parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links,
+            anonymous_references=config.m2r_anonymous_references,
         )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
