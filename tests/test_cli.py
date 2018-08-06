@@ -33,6 +33,7 @@ class TestConvert(TestCase):
         options.overwrite = False
         options.dry_run = False
         options.no_underscore_emphasis = False
+        options.anonymous_references = False
         self._orig_argv = copy(sys.argv)
         if path.exists(test_rst):
             with open(test_rst) as f:
@@ -54,6 +55,7 @@ class TestConvert(TestCase):
             message = buffer.read().decode()
         self.assertIn('usage', message)
         self.assertIn('underscore-emphasis', message)
+        self.assertIn('anonymous-references', message)
         self.assertIn('optional arguments:', message)
 
     def test_parse_file(self):
@@ -122,3 +124,11 @@ class TestConvert(TestCase):
             main()
         self.assertIn('__content__', m.call_args[0][0])
         self.assertNotIn('**content**', m.call_args[0][0])
+
+    def test_anonymous_reference_option(self):
+        sys.argv = [
+            sys.argv[0], '--anonymous-references', '--dry-run', test_md]
+        with patch(_builtin + '.print') as m:
+            main()
+        self.assertIn("`A link to GitHub <http://github.com/>`__",
+                      m.call_args[0][0])

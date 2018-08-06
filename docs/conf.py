@@ -50,6 +50,7 @@ templates_path = ['_templates']
 source_suffix = '.md'
 no_underscore_emphasis = True
 m2r_parse_relative_links = True
+m2r_anonymous_references = False
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
