@@ -1,6 +1,4 @@
-## Version 0.2
-
-### Version 0.1.16 (next version)
+## Version 0.2.0 (2018-08-13)
 
 * Add `start-line` and `end-line` option to `mdinclude` directive
 * Add `anonymous_references` option ([#26](https://github.com/miyakogi/m2r/pull/26))
