@@ -44,6 +44,9 @@ parser.add_argument('--no-underscore-emphasis', action='store_true',
 parser.add_argument('--parse-relative-links', action='store_true',
                     default=False,
                     help='parse relative links into ref or doc directives')
+parser.add_argument('--anonymous-references', action='store_true',
+                    default=False,
+                    help='use anonymous references in generated rst')
 
 
 def parse_options():
@@ -191,11 +194,14 @@ class RestRenderer(mistune.Renderer):
 
     def __init__(self, *args, **kwargs):
         self.parse_relative_links = kwargs.pop('parse_relative_links', False)
+        self.anonymous_references = kwargs.pop('anonymous_references', False)
         super(RestRenderer, self).__init__(*args, **kwargs)
         if not _is_sphinx:
             parse_options()
             if options.parse_relative_links:
                 self.parse_relative_links = options.parse_relative_links
+            if options.anonymous_references:
+                self.anonymous_references = options.anonymous_references
 
     def _indent_block(self, block):
         return '\n'.join(self.indent + line if line else ''
@@ -364,6 +370,10 @@ class RestRenderer(mistune.Renderer):
         :param title: title content for `title` attribute.
         :param text: text content for description.
         """
+        if self.anonymous_references:
+            underscore = '__'
+        else:
+            underscore = '_'
         if title:
             return self._raw_html(
                 '<a href="{link}" title="{title}">{text}</a>'.format(
@@ -371,13 +381,18 @@ class RestRenderer(mistune.Renderer):
                 )
             )
         if not self.parse_relative_links:
-            return '\ `{text} <{target}>`_\ '.format(target=link, text=text)
+            return '\ `{text} <{target}>`{underscore}\ '.format(
+                target=link,
+                text=text,
+                underscore=underscore
+            )
         else:
             url_info = urlparse(link)
             if url_info.scheme:
-                return '\ `{text} <{target}>`_\ '.format(
+                return '\ `{text} <{target}>`{underscore}\ '.format(
                     target=link,
-                    text=text
+                    text=text,
+                    underscore=underscore
                 )
             else:
                 link_type = 'doc'
@@ -528,7 +543,8 @@ class M2RParser(rst.Parser, object):
         config = document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.m2r_parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links,
+            anonymous_references=config.m2r_anonymous_references,
         )
         super(M2RParser, self).parse(converter(inputstring), document)
 
@@ -589,7 +605,8 @@ class MdInclude(rst.Directive):
         config = self.state.document.settings.env.config
         converter = M2R(
             no_underscore_emphasis=config.no_underscore_emphasis,
-            parse_relative_links=config.m2r_parse_relative_links
+            parse_relative_links=config.m2r_parse_relative_links,
+            anonymous_references=config.m2r_anonymous_references,
         )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
@@ -604,6 +621,7 @@ def setup(app):
     _is_sphinx = True
     app.add_config_value('no_underscore_emphasis', False, 'env')
     app.add_config_value('m2r_parse_relative_links', False, 'env')
+    app.add_config_value('m2r_anonymous_references', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
