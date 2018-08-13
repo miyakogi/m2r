@@ -139,6 +139,40 @@ The below is reST-style math-block.
 
    E = mc^2
 
+
+### Include Markdown file
+
+To include markdown file:
+
+```rest
+.. mdinclude:: path-to-flie.md
+```
+
+To include markdown file with specific lines:
+
+```rest
+.. mdinclude:: included.md
+   :start-line: 2
+   :end-line: -2
+```
+
+Original ``included.md`` file is:
+
+.. include:: included.md
+   :code: md
+
+This file included as:
+
+```md
+#### Includs this line
+```
+
+and results in HTML as below:
+
+.. mdinclude:: included.md
+   :start-line: 2
+   :end-line: -2
+
 ### Footnote
 
 Footnote[^1] and footnote[^key] with markdown.
