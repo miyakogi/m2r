@@ -9,3 +9,5 @@ SubTitle
 
 サブタイトル
 ------------
+
+`A link to GitHub <http://github.com/>`_
