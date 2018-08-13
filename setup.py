@@ -24,7 +24,7 @@ if sys.version_info < (3, 3):
 
 setup(
     name='m2r',
-    version='0.1.15',
+    version='0.2.0',
     description='Markdown and reStructuredText in a single file.',
     long_description=readme,
     author='Hiroyuki Takagi',
