@@ -560,6 +560,10 @@ class MdInclude(rst.Directive):
     """
     required_arguments = 1
     optional_arguments = 0
+    option_spec = {
+        'start-line': int,
+        'end-line': int,
+    }
 
     def run(self):
         """Most of this method is from ``docutils.parser.rst.Directive``.
@@ -599,8 +603,14 @@ class MdInclude(rst.Directive):
                               (self.name, ErrorString(error)))
 
         # read from the file
+        startline = self.options.get('start-line', None)
+        endline = self.options.get('end-line', None)
         try:
-            rawtext = include_file.read()
+            if startline or (endline is not None):
+                lines = include_file.readlines()
+                rawtext = ''.join(lines[startline:endline])
+            else:
+                rawtext = include_file.read()
         except UnicodeError as error:
             raise self.severe('Problem with "%s" directive:\n%s' %
                               (self.name, ErrorString(error)))
