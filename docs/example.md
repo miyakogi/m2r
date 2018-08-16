@@ -145,7 +145,7 @@ The below is reST-style math-block.
 To include markdown file:
 
 ```rest
-.. mdinclude:: path-to-flie.md
+.. mdinclude:: path-to-file.md
 ```
 
 To include markdown file with specific lines:
@@ -164,7 +164,7 @@ Original ``included.md`` file is:
 This file included as:
 
 ```md
-#### Includs this line
+#### Include this line
 ```
 
 and results in HTML as below:
