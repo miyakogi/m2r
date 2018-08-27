@@ -47,6 +47,9 @@ parser.add_argument('--parse-relative-links', action='store_true',
 parser.add_argument('--anonymous-references', action='store_true',
                     default=False,
                     help='use anonymous references in generated rst')
+parser.add_argument('--disable-inline-math', action='store_true',
+                    default=False,
+                    help='disable parsing inline math')
 
 
 def parse_options():
@@ -131,19 +134,23 @@ class RestInlineLexer(mistune.InlineLexer):
         'image_link',
         'rest_role',
         'rest_link',
-        'inline_math',
         'eol_literal_marker',
     ] + mistune.InlineLexer.default_rules
 
     def __init__(self, *args, **kwargs):
         no_underscore_emphasis = kwargs.pop('no_underscore_emphasis', False)
+        disable_inline_math = kwargs.pop('disable_inline_math', False)
         super(RestInlineLexer, self).__init__(*args, **kwargs)
-        if no_underscore_emphasis:
-            self.rules.no_underscore_emphasis()
-        elif not _is_sphinx:
+        if not _is_sphinx:
             parse_options()
-            if options.no_underscore_emphasis:
-                self.rules.no_underscore_emphasis()
+        if no_underscore_emphasis or options.no_underscore_emphasis:
+            self.rules.no_underscore_emphasis()
+        inline_maths = 'inline_math' in self.default_rules
+        if disable_inline_math or options.disable_inline_math:
+            if inline_maths:
+                self.default_rules.remove('inline_math')
+        elif not inline_maths:
+            self.default_rules.insert(0, 'inline_math')
 
     def output_double_emphasis(self, m):
         # may include code span
@@ -548,6 +555,7 @@ class M2RParser(rst.Parser, object):
             no_underscore_emphasis=config.no_underscore_emphasis,
             parse_relative_links=config.m2r_parse_relative_links,
             anonymous_references=config.m2r_anonymous_references,
+            disable_inline_math=config.m2r_disable_inline_math
         )
         super(M2RParser, self).parse(converter(inputstring), document)
 
@@ -620,6 +628,7 @@ class MdInclude(rst.Directive):
             no_underscore_emphasis=config.no_underscore_emphasis,
             parse_relative_links=config.m2r_parse_relative_links,
             anonymous_references=config.m2r_anonymous_references,
+            disable_inline_math=config.m2r_disable_inline_math
         )
         include_lines = statemachine.string2lines(converter(rawtext),
                                                   tab_width,
@@ -635,6 +644,7 @@ def setup(app):
     app.add_config_value('no_underscore_emphasis', False, 'env')
     app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_config_value('m2r_anonymous_references', False, 'env')
+    app.add_config_value('m2r_disable_inline_math', False, 'env')
     app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
