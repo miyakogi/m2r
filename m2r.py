@@ -143,10 +143,12 @@ class RestInlineLexer(mistune.InlineLexer):
         super(RestInlineLexer, self).__init__(*args, **kwargs)
         if not _is_sphinx:
             parse_options()
-        if no_underscore_emphasis or options.no_underscore_emphasis:
+        if no_underscore_emphasis or \
+         getattr(options, 'no_underscore_emphasis', False):
             self.rules.no_underscore_emphasis()
         inline_maths = 'inline_math' in self.default_rules
-        if disable_inline_math or options.disable_inline_math:
+        if disable_inline_math or \
+         getattr(options, 'disable_inline_math', False):
             if inline_maths:
                 self.default_rules.remove('inline_math')
         elif not inline_maths:
@@ -205,9 +207,9 @@ class RestRenderer(mistune.Renderer):
         super(RestRenderer, self).__init__(*args, **kwargs)
         if not _is_sphinx:
             parse_options()
-            if options.parse_relative_links:
+            if getattr(options, 'parse_relative_links', False):
                 self.parse_relative_links = options.parse_relative_links
-            if options.anonymous_references:
+            if getattr(options, 'anonymous_references', False):
                 self.anonymous_references = options.anonymous_references
 
     def _indent_block(self, block):
