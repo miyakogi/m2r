@@ -143,12 +143,14 @@ class RestInlineLexer(mistune.InlineLexer):
         super(RestInlineLexer, self).__init__(*args, **kwargs)
         if not _is_sphinx:
             parse_options()
-        if no_underscore_emphasis or \
-         getattr(options, 'no_underscore_emphasis', False):
+        if no_underscore_emphasis or getattr(options,
+                                             'no_underscore_emphasis',
+                                             False):
             self.rules.no_underscore_emphasis()
         inline_maths = 'inline_math' in self.default_rules
-        if disable_inline_math or \
-         getattr(options, 'disable_inline_math', False):
+        if disable_inline_math or getattr(options,
+                                          'disable_inline_math',
+                                          False):
             if inline_maths:
                 self.default_rules.remove('inline_math')
         elif not inline_maths:
