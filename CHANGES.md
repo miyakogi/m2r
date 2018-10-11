@@ -1,3 +1,9 @@
+## Version 0.3.0
+
+### Version 0.2.1 (2018-10-12)
+
+* Add `--disable-inline-math` and `m2r_disable_inline_math` sphinx option
+
 ## Version 0.2.0 (2018-08-13)
 
 * Add `start-line` and `end-line` option to `mdinclude` directive
