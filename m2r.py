@@ -416,7 +416,7 @@ class RestRenderer(mistune.Renderer):
                         # Example: [text](#anchor)
                         link_type = 'ref'
                 doc_link = '{doc_name}{anchor}'.format(
-                    # splitext approach works whether or not path is set. It
+                    # splittext approach works whether or not path is set. It
                     # will return an empty string if unset, which leads to
                     # anchor only ref.
                     doc_name=os.path.splitext(url_info.path)[0],
@@ -567,7 +567,7 @@ class M2RParser(rst.Parser, object):
 class MdInclude(rst.Directive):
     """Directive class to include markdown in sphinx.
 
-    Load a file and convert it to rst and insert as a node. Currentlly
+    Load a file and convert it to rst and insert as a node. Currently
     directive-specific options are not implemented.
     """
     required_arguments = 1
@@ -599,7 +599,7 @@ class MdInclude(rst.Directive):
         tab_width = self.options.get(
             'tab-width', self.state.document.settings.tab_width)
 
-        # open the inclding file
+        # open the including file
         try:
             self.state.document.settings.record_dependencies.add(path)
             include_file = io.FileInput(source_path=path,
@@ -642,7 +642,7 @@ class MdInclude(rst.Directive):
 
 
 def setup(app):
-    """When used for spinx extension."""
+    """When used for sphinx extension."""
     global _is_sphinx
     _is_sphinx = True
     app.add_config_value('no_underscore_emphasis', False, 'env')
