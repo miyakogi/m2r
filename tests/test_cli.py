@@ -34,6 +34,7 @@ class TestConvert(TestCase):
         options.dry_run = False
         options.no_underscore_emphasis = False
         options.anonymous_references = False
+        options.disable_inline_math = False
         self._orig_argv = copy(sys.argv)
         if path.exists(test_rst):
             with open(test_rst) as f:
@@ -56,6 +57,7 @@ class TestConvert(TestCase):
         self.assertIn('usage', message)
         self.assertIn('underscore-emphasis', message)
         self.assertIn('anonymous-references', message)
+        self.assertIn('inline-math', message)
         self.assertIn('optional arguments:', message)
 
     def test_parse_file(self):
@@ -132,3 +134,11 @@ class TestConvert(TestCase):
             main()
         self.assertIn("`A link to GitHub <http://github.com/>`__",
                       m.call_args[0][0])
+
+    def test_disable_inline_math(self):
+        sys.argv = [
+            sys.argv[0], '--disable-inline-math', '--dry-run', test_md]
+        with patch(_builtin + '.print') as m:
+            main()
+        self.assertIn('``$E = mc^2$``', m.call_args[0][0])
+        self.assertNotIn(':math:', m.call_args[0][0])
