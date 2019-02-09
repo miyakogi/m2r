@@ -228,7 +228,7 @@ class RestRenderer(mistune.Renderer):
         elif lang:
             first_line = '\n.. code-block:: {}\n\n'.format(lang)
         elif _is_sphinx:
-            first_line = '\n.. code-block:: guess\n\n'
+            first_line = '\n::\n\n'
         else:
             first_line = '\n.. code-block::\n\n'
         return first_line + self._indent_block(code) + '\n'
