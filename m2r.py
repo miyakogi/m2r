@@ -507,7 +507,7 @@ class RestRenderer(mistune.Renderer):
         return marker
 
     def directive(self, text):
-        return '\n' + text + '\n'
+        return '\n' + text
 
     def rest_code_block(self):
         return '\n\n'
