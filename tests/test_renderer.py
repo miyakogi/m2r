@@ -43,6 +43,7 @@ class RendererTestBase(TestCase):
 class TestBasic(RendererTestBase):
     def test_fail_rst(self):
         with self.assertRaises(AssertionError):
+            # This check should be failed and report warning
             self.check_rst('```')
 
     def test_simple_paragraph(self):
@@ -709,7 +710,6 @@ class TestFootNote(RendererTestBase):
             '',
             '.. [#a] note rst',  # one empty line inserted...
             '',
-            '',
             '.. [#fn-1] note 1',
             '.. [#fn-2] note 2',
             '.. [#fn-ref] note ref',
@@ -719,22 +719,22 @@ class TestFootNote(RendererTestBase):
     def test_sphinx_ref(self):
         src = 'This is a sphinx [ref]_ global ref.\n\n.. [ref] ref text'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + src + '\n')
+        self.assertEqual(out, '\n' + src)
 
 
 class TestDirective(RendererTestBase):
     def test_comment_oneline(self):
         src = '.. a'
         out = self.conv(src)
-        self.assertEqual(out, '\n.. a\n')
+        self.assertEqual(out, '\n.. a')
 
     def test_comment_indented(self):
         src = '    .. a'
         out = self.conv(src)
-        self.assertEqual(out, '\n    .. a\n')
+        self.assertEqual(out, '\n    .. a')
 
     def test_comment_newline(self):
-        src = '..\n\n   comment\nnewline'
+        src = '..\n\n   comment\n\nnewline'
         out = self.conv(src)
         self.assertEqual(out, '\n..\n\n   comment\n\nnewline\n')
 
@@ -748,7 +748,7 @@ class TestDirective(RendererTestBase):
             '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + comment + '\n``eoc``\n')
+        self.assertEqual(out, '\n' + comment + '``eoc``\n')
 
 
 class TestRestCode(RendererTestBase):
