@@ -220,7 +220,7 @@ class RestRenderer(mistune.Renderer):
 
     def _raw_html(self, html):
         self._include_raw_html = True
-        return '\ :raw-html-m2r:`{}`\ '.format(html)
+        return r'\ :raw-html-m2r:`{}`\ '.format(html)
 
     def block_code(self, code, lang=None):
         if lang == 'math':
@@ -323,14 +323,14 @@ class RestRenderer(mistune.Renderer):
 
         :param text: text content for emphasis.
         """
-        return '\ **{}**\ '.format(text)
+        return r'\ **{}**\ '.format(text)
 
     def emphasis(self, text):
         """Rendering *emphasis* text.
 
         :param text: text content for emphasis.
         """
-        return '\ *{}*\ '.format(text)
+        return r'\ *{}*\ '.format(text)
 
     def codespan(self, text):
         """Rendering inline `code` text.
@@ -338,7 +338,7 @@ class RestRenderer(mistune.Renderer):
         :param text: text content for inline code.
         """
         if '``' not in text:
-            return '\ ``{}``\ '.format(text)
+            return r'\ ``{}``\ '.format(text)
         else:
             # actually, docutils split spaces in literal
             return self._raw_html(
@@ -392,7 +392,7 @@ class RestRenderer(mistune.Renderer):
                 )
             )
         if not self.parse_relative_links:
-            return '\ `{text} <{target}>`{underscore}\ '.format(
+            return r'\ `{text} <{target}>`{underscore}\ '.format(
                 target=link,
                 text=text,
                 underscore=underscore
@@ -400,7 +400,7 @@ class RestRenderer(mistune.Renderer):
         else:
             url_info = urlparse(link)
             if url_info.scheme:
-                return '\ `{text} <{target}>`{underscore}\ '.format(
+                return r'\ `{text} <{target}>`{underscore}\ '.format(
                     target=link,
                     text=text,
                     underscore=underscore
@@ -422,7 +422,7 @@ class RestRenderer(mistune.Renderer):
                     doc_name=os.path.splitext(url_info.path)[0],
                     anchor=anchor
                 )
-                return '\ :{link_type}:`{text} <{doc_link}>`\ '.format(
+                return r'\ :{link_type}:`{text} <{doc_link}>`\ '.format(
                     link_type=link_type,
                     doc_link=doc_link,
                     text=text
@@ -462,7 +462,7 @@ class RestRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param index: the index count of current footnote.
         """
-        return '\ [#fn-{}]_\ '.format(key)
+        return r'\ [#fn-{}]_\ '.format(key)
 
     def footnote_item(self, key, text):
         """Rendering a footnote item.
@@ -500,7 +500,7 @@ class RestRenderer(mistune.Renderer):
 
     def inline_math(self, math):
         """Extension of recommonmark"""
-        return '\ :math:`{}`\ '.format(math)
+        return r'\ :math:`{}`\ '.format(math)
 
     def eol_literal_marker(self, marker):
         """Extension of recommonmark"""
@@ -605,7 +605,7 @@ class MdInclude(rst.Directive):
             include_file = io.FileInput(source_path=path,
                                         encoding=encoding,
                                         error_handler=e_handler)
-        except UnicodeEncodeError as error:
+        except UnicodeEncodeError:
             raise self.severe('Problems with "%s" directive path:\n'
                               'Cannot encode input file path "%s" '
                               '(wrong locale?).' %
@@ -649,7 +649,11 @@ def setup(app):
     app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_config_value('m2r_anonymous_references', False, 'env')
     app.add_config_value('m2r_disable_inline_math', False, 'env')
-    app.add_source_parser('.md', M2RParser)
+    if hasattr(app, 'add_source_suffix'):
+        app.add_source_suffix('.md', 'markdown')
+        app.add_source_parser(M2RParser)
+    else:
+        app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
         version=__version__,

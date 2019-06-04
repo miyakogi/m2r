@@ -77,7 +77,7 @@ class TestBasic(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            prolog + '\nabc def\ :raw-html-m2r:`<br>`\nghi' + '\n',
+            prolog + '\nabc def\\ :raw-html-m2r:`<br>`\nghi' + '\n',
         )
 
 
@@ -244,7 +244,7 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na co:\ ``de`` and `RefLink <http://example.com>`_ here.\n',
+            '\na co:\\ ``de`` and `RefLink <http://example.com>`_ here.\n',
         )
 
     def test_rest_role_incomplete2(self):
@@ -252,7 +252,7 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na `RefLink <http://example.com>`_ and co:\ ``de`` here.\n',
+            '\na `RefLink <http://example.com>`_ and co:\\ ``de`` here.\n',
         )
 
     def test_rest_role_with_code(self):
@@ -704,8 +704,8 @@ class TestFootNote(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n'.join([
             '',
-            'This is a\ [#fn-1]_ '
-            'footnote\ [#fn-2]_ ref\ [#fn-ref]_ with rst [#a]_.',
+            'This is a\\ [#fn-1]_ '
+            'footnote\\ [#fn-2]_ ref\\ [#fn-ref]_ with rst [#a]_.',
             '',
             '.. [#a] note rst',  # one empty line inserted...
             '',
