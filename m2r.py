@@ -659,9 +659,9 @@ class MdInclude(rst.Directive):
                              for number in line_range.split('-', 1)]
                 if len(endpoints) > 1:
                     keep_line_ranges.update(
-                        set(range(endpoints[0], endpoints[1]+1)))
+                        set(range(endpoints[0]-1, endpoints[1])))
                 else:
-                    keep_line_ranges.add(endpoints[0])
+                    keep_line_ranges.add(endpoints[0]-1)
             keep = keep.intersection(keep_line_ranges)
 
         lines = [lines[i] for i in sorted(keep)]
