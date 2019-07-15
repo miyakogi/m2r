@@ -142,13 +142,13 @@ The below is reST-style math-block.
 
 ### Include Markdown file
 
-To include markdown file:
+To include a markdown file:
 
 ```rest
 .. mdinclude:: path-to-file.md
 ```
 
-To include markdown file with specific lines:
+To include a markdown file with a specific start and end line:
 
 ```rest
 .. mdinclude:: included.md
@@ -156,22 +156,60 @@ To include markdown file with specific lines:
    :end-line: -2
 ```
 
-Original ``included.md`` file is:
+The original ``included.md`` file is:
 
 .. include:: included.md
    :code: md
 
-This file included as:
+This file is included as:
 
 ```md
 #### Include this line
 ```
 
-and results in HTML as below:
+and the results in HTML are as shown below:
 
 .. mdinclude:: included.md
    :start-line: 2
    :end-line: -2
+
+To include a markdown file with specific line ranges:
+
+```rest
+.. mdinclude:: line_inclusion.md
+   :lines: 1, 3-4, 7-
+```
+
+The original ``line_inclusion.md`` file is:
+
+.. include:: line_inclusion.md
+   :code: md
+
+And the resulting HTML output is:
+
+.. mdinclude:: line_inclusion.md
+   :lines: 1, 3-4, 7-
+
+
+To include a markdown file by specific text:
+
+```rest
+.. mdinclude:: text_inclusion.md
+   :start-after: Start Here
+   :end-before: End Here
+```
+
+The original ``text_inclusion.md`` file is:
+
+.. include:: text_inclusion.md
+   :code: md
+
+And the resulting HTML output is:
+
+.. mdinclude:: text_inclusion.md
+   :start-after: Start Here
+   :end-before: End Here
+
 
 ### Footnote
 
