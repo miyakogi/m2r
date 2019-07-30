@@ -17,7 +17,7 @@ except ImportError:
     with open(readme_file) as f:
         readme = f.read()
 
-install_requires = ['mistune', 'docutils']
+install_requires = ['mistune<2', 'docutils']
 test_requirements = ['pygments']
 if sys.version_info < (3, 3):
     test_requirements.append('mock')
