@@ -58,7 +58,7 @@ class TestConvert(TestCase):
         self.assertIn('underscore-emphasis', message)
         self.assertIn('anonymous-references', message)
         self.assertIn('inline-math', message)
-        self.assertIn('optional arguments:', message)
+        self.assertRegex(message, r'option(s|al arguments):')
 
     def test_parse_file(self):
         output = parse_from_file(test_md)
