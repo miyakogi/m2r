@@ -43,7 +43,7 @@ a code block in HTML like `see <code>ref</code>_`, which is not expected.
 
 ## Installation
 
-Python 2.7 or Python 3.4+ is required.
+Python 3.7+ is required.
 
 ```
 pip install m2r

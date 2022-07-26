@@ -12,15 +12,8 @@ import subprocess
 
 from m2r import parse_from_file, main, options
 
-if sys.version_info < (3, ):
-    from mock import patch
-    _builtin = '__builtin__'
-    from codecs import open as _open
-    from functools import partial
-    open = partial(_open, encoding='utf-8')
-else:
-    from unittest.mock import patch
-    _builtin = 'builtins'
+from unittest.mock import patch
+_builtin = 'builtins'
 
 curdir = path.dirname(path.abspath(__file__))
 test_md = path.join(curdir, 'test.md')
@@ -58,7 +51,7 @@ class TestConvert(TestCase):
         self.assertIn('underscore-emphasis', message)
         self.assertIn('anonymous-references', message)
         self.assertIn('inline-math', message)
-        self.assertIn('optional arguments:', message)
+        self.assertIn('options:', message)
 
     def test_parse_file(self):
         output = parse_from_file(test_md)

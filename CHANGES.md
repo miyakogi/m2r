@@ -1,5 +1,9 @@
 ## Version 0.3.0
 
+* Drop support for Python 2.7, 3.4, 3.5, and 3.6
+* Add compatibility with docutils 0.19
+* Sync up assertion with changes in argparse
+
 ### Version 0.2.1 (2018-10-12)
 
 * Add `--disable-inline-math` and `m2r_disable_inline_math` sphinx option
