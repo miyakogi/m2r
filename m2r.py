@@ -5,21 +5,13 @@ from __future__ import print_function, unicode_literals
 import os
 import os.path
 import re
-import sys
 from argparse import ArgumentParser, Namespace
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
-from docutils.core import ErrorString
-from docutils.utils import SafeString, column_width
+from docutils.utils import column_width
 import mistune
-
-if sys.version_info < (3, ):
-    from codecs import open as _open
-    from urlparse import urlparse
-else:
-    _open = open
-    from urllib.parse import urlparse
+from urllib.parse import urlparse
 
 __version__ = '0.2.1'
 _is_sphinx = False
@@ -609,10 +601,10 @@ class MdInclude(rst.Directive):
             raise self.severe('Problems with "%s" directive path:\n'
                               'Cannot encode input file path "%s" '
                               '(wrong locale?).' %
-                              (self.name, SafeString(path)))
+                              (self.name, path))
         except IOError as error:
             raise self.severe('Problems with "%s" directive path:\n%s.' %
-                              (self.name, ErrorString(error)))
+                              (self.name, io.error_string(error)))
 
         # read from the file
         startline = self.options.get('start-line', None)
@@ -625,7 +617,7 @@ class MdInclude(rst.Directive):
                 rawtext = include_file.read()
         except UnicodeError as error:
             raise self.severe('Problem with "%s" directive:\n%s' %
-                              (self.name, ErrorString(error)))
+                              (self.name, io.error_string(error)))
 
         config = self.state.document.settings.env.config
         converter = M2R(
@@ -670,7 +662,7 @@ def convert(text, **kwargs):
 def parse_from_file(file, encoding='utf-8', **kwargs):
     if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
-    with _open(file, encoding=encoding) as f:
+    with open(file, encoding=encoding) as f:
         src = f.read()
     output = convert(src, **kwargs)
     return output
@@ -684,7 +676,7 @@ def save_to_file(file, src, encoding='utf-8', **kwargs):
         if confirm.upper() not in ('Y', 'YES'):
             print('skip {}'.format(file))
             return
-    with _open(target, 'w', encoding=encoding) as f:
+    with open(target, 'w', encoding=encoding) as f:
         f.write(src)
 
 

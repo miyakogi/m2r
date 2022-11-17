@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 from os import path
 
 try:
@@ -17,10 +16,8 @@ except ImportError:
     with open(readme_file) as f:
         readme = f.read()
 
-install_requires = ['mistune', 'docutils']
+install_requires = ['mistune<2', 'docutils']
 test_requirements = ['pygments']
-if sys.version_info < (3, 3):
-    test_requirements.append('mock')
 
 setup(
     name='m2r',
@@ -42,12 +39,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Text Processing',
     ],
     install_requires=install_requires,
