@@ -13,7 +13,7 @@ from docutils.utils import column_width
 import mistune
 from urllib.parse import urlparse
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)

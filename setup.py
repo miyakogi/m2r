@@ -21,7 +21,7 @@ test_requirements = ['pygments']
 
 setup(
     name='m2r',
-    version='0.3.0',
+    version='0.3.1',
     description='Markdown and reStructuredText in a single file.',
     long_description=readme,
     author='Hiroyuki Takagi',
