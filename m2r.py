@@ -5,23 +5,15 @@ from __future__ import print_function, unicode_literals
 import os
 import os.path
 import re
-import sys
 from argparse import ArgumentParser, Namespace
 
 from docutils import statemachine, nodes, io, utils
 from docutils.parsers import rst
-from docutils.core import ErrorString
-from docutils.utils import SafeString, column_width
+from docutils.utils import column_width
 import mistune
+from urllib.parse import urlparse
 
-if sys.version_info < (3, ):
-    from codecs import open as _open
-    from urlparse import urlparse
-else:
-    _open = open
-    from urllib.parse import urlparse
-
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 _is_sphinx = False
 prolog = '''\
 .. role:: raw-html-m2r(raw)
@@ -220,7 +212,7 @@ class RestRenderer(mistune.Renderer):
 
     def _raw_html(self, html):
         self._include_raw_html = True
-        return '\ :raw-html-m2r:`{}`\ '.format(html)
+        return r'\ :raw-html-m2r:`{}`\ '.format(html)
 
     def block_code(self, code, lang=None):
         if lang == 'math':
@@ -228,7 +220,7 @@ class RestRenderer(mistune.Renderer):
         elif lang:
             first_line = '\n.. code-block:: {}\n\n'.format(lang)
         elif _is_sphinx:
-            first_line = '\n.. code-block:: guess\n\n'
+            first_line = '\n::\n\n'
         else:
             first_line = '\n.. code-block::\n\n'
         return first_line + self._indent_block(code) + '\n'
@@ -323,14 +315,14 @@ class RestRenderer(mistune.Renderer):
 
         :param text: text content for emphasis.
         """
-        return '\ **{}**\ '.format(text)
+        return r'\ **{}**\ '.format(text)
 
     def emphasis(self, text):
         """Rendering *emphasis* text.
 
         :param text: text content for emphasis.
         """
-        return '\ *{}*\ '.format(text)
+        return r'\ *{}*\ '.format(text)
 
     def codespan(self, text):
         """Rendering inline `code` text.
@@ -338,7 +330,7 @@ class RestRenderer(mistune.Renderer):
         :param text: text content for inline code.
         """
         if '``' not in text:
-            return '\ ``{}``\ '.format(text)
+            return r'\ ``{}``\ '.format(text)
         else:
             # actually, docutils split spaces in literal
             return self._raw_html(
@@ -392,7 +384,7 @@ class RestRenderer(mistune.Renderer):
                 )
             )
         if not self.parse_relative_links:
-            return '\ `{text} <{target}>`{underscore}\ '.format(
+            return r'\ `{text} <{target}>`{underscore}\ '.format(
                 target=link,
                 text=text,
                 underscore=underscore
@@ -400,7 +392,7 @@ class RestRenderer(mistune.Renderer):
         else:
             url_info = urlparse(link)
             if url_info.scheme:
-                return '\ `{text} <{target}>`{underscore}\ '.format(
+                return r'\ `{text} <{target}>`{underscore}\ '.format(
                     target=link,
                     text=text,
                     underscore=underscore
@@ -422,7 +414,7 @@ class RestRenderer(mistune.Renderer):
                     doc_name=os.path.splitext(url_info.path)[0],
                     anchor=anchor
                 )
-                return '\ :{link_type}:`{text} <{doc_link}>`\ '.format(
+                return r'\ :{link_type}:`{text} <{doc_link}>`\ '.format(
                     link_type=link_type,
                     doc_link=doc_link,
                     text=text
@@ -462,7 +454,7 @@ class RestRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param index: the index count of current footnote.
         """
-        return '\ [#fn-{}]_\ '.format(key)
+        return r'\ [#fn-{}]_\ '.format(key)
 
     def footnote_item(self, key, text):
         """Rendering a footnote item.
@@ -500,14 +492,14 @@ class RestRenderer(mistune.Renderer):
 
     def inline_math(self, math):
         """Extension of recommonmark"""
-        return '\ :math:`{}`\ '.format(math)
+        return r'\ :math:`{}`\ '.format(math)
 
     def eol_literal_marker(self, marker):
         """Extension of recommonmark"""
         return marker
 
     def directive(self, text):
-        return '\n' + text + '\n'
+        return '\n' + text
 
     def rest_code_block(self):
         return '\n\n'
@@ -605,14 +597,14 @@ class MdInclude(rst.Directive):
             include_file = io.FileInput(source_path=path,
                                         encoding=encoding,
                                         error_handler=e_handler)
-        except UnicodeEncodeError as error:
+        except UnicodeEncodeError:
             raise self.severe('Problems with "%s" directive path:\n'
                               'Cannot encode input file path "%s" '
                               '(wrong locale?).' %
-                              (self.name, SafeString(path)))
+                              (self.name, path))
         except IOError as error:
             raise self.severe('Problems with "%s" directive path:\n%s.' %
-                              (self.name, ErrorString(error)))
+                              (self.name, io.error_string(error)))
 
         # read from the file
         startline = self.options.get('start-line', None)
@@ -625,7 +617,7 @@ class MdInclude(rst.Directive):
                 rawtext = include_file.read()
         except UnicodeError as error:
             raise self.severe('Problem with "%s" directive:\n%s' %
-                              (self.name, ErrorString(error)))
+                              (self.name, io.error_string(error)))
 
         config = self.state.document.settings.env.config
         converter = M2R(
@@ -649,7 +641,11 @@ def setup(app):
     app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_config_value('m2r_anonymous_references', False, 'env')
     app.add_config_value('m2r_disable_inline_math', False, 'env')
-    app.add_source_parser('.md', M2RParser)
+    if hasattr(app, 'add_source_suffix'):
+        app.add_source_suffix('.md', 'markdown')
+        app.add_source_parser(M2RParser)
+    else:
+        app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
         version=__version__,
@@ -666,7 +662,7 @@ def convert(text, **kwargs):
 def parse_from_file(file, encoding='utf-8', **kwargs):
     if not os.path.exists(file):
         raise OSError('No such file exists: {}'.format(file))
-    with _open(file, encoding=encoding) as f:
+    with open(file, encoding=encoding) as f:
         src = f.read()
     output = convert(src, **kwargs)
     return output
@@ -680,7 +676,7 @@ def save_to_file(file, src, encoding='utf-8', **kwargs):
         if confirm.upper() not in ('Y', 'YES'):
             print('skip {}'.format(file))
             return
-    with _open(target, 'w', encoding=encoding) as f:
+    with open(target, 'w', encoding=encoding) as f:
         f.write(src)
 
 

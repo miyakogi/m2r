@@ -43,6 +43,7 @@ class RendererTestBase(TestCase):
 class TestBasic(RendererTestBase):
     def test_fail_rst(self):
         with self.assertRaises(AssertionError):
+            # This check should be failed and report warning
             self.check_rst('```')
 
     def test_simple_paragraph(self):
@@ -77,7 +78,7 @@ class TestBasic(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            prolog + '\nabc def\ :raw-html-m2r:`<br>`\nghi' + '\n',
+            prolog + '\nabc def\\ :raw-html-m2r:`<br>`\nghi' + '\n',
         )
 
 
@@ -244,7 +245,7 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na co:\ ``de`` and `RefLink <http://example.com>`_ here.\n',
+            '\na co:\\ ``de`` and `RefLink <http://example.com>`_ here.\n',
         )
 
     def test_rest_role_incomplete2(self):
@@ -252,7 +253,7 @@ class TestInlineMarkdown(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(
             out,
-            '\na `RefLink <http://example.com>`_ and co:\ ``de`` here.\n',
+            '\na `RefLink <http://example.com>`_ and co:\\ ``de`` here.\n',
         )
 
     def test_rest_role_with_code(self):
@@ -704,11 +705,10 @@ class TestFootNote(RendererTestBase):
         out = self.conv(src)
         self.assertEqual(out, '\n'.join([
             '',
-            'This is a\ [#fn-1]_ '
-            'footnote\ [#fn-2]_ ref\ [#fn-ref]_ with rst [#a]_.',
+            'This is a\\ [#fn-1]_ '
+            'footnote\\ [#fn-2]_ ref\\ [#fn-ref]_ with rst [#a]_.',
             '',
             '.. [#a] note rst',  # one empty line inserted...
-            '',
             '',
             '.. [#fn-1] note 1',
             '.. [#fn-2] note 2',
@@ -719,22 +719,22 @@ class TestFootNote(RendererTestBase):
     def test_sphinx_ref(self):
         src = 'This is a sphinx [ref]_ global ref.\n\n.. [ref] ref text'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + src + '\n')
+        self.assertEqual(out, '\n' + src)
 
 
 class TestDirective(RendererTestBase):
     def test_comment_oneline(self):
         src = '.. a'
         out = self.conv(src)
-        self.assertEqual(out, '\n.. a\n')
+        self.assertEqual(out, '\n.. a')
 
     def test_comment_indented(self):
         src = '    .. a'
         out = self.conv(src)
-        self.assertEqual(out, '\n    .. a\n')
+        self.assertEqual(out, '\n    .. a')
 
     def test_comment_newline(self):
-        src = '..\n\n   comment\nnewline'
+        src = '..\n\n   comment\n\nnewline'
         out = self.conv(src)
         self.assertEqual(out, '\n..\n\n   comment\n\nnewline\n')
 
@@ -748,7 +748,7 @@ class TestDirective(RendererTestBase):
             '\n\n')
         src = comment + '`eoc`'
         out = self.conv(src)
-        self.assertEqual(out, '\n' + comment + '\n``eoc``\n')
+        self.assertEqual(out, '\n' + comment + '``eoc``\n')
 
 
 class TestRestCode(RendererTestBase):
