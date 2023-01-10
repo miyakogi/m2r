@@ -641,11 +641,11 @@ def setup(app):
     app.add_config_value('m2r_parse_relative_links', False, 'env')
     app.add_config_value('m2r_anonymous_references', False, 'env')
     app.add_config_value('m2r_disable_inline_math', False, 'env')
-    if hasattr(app, 'add_source_suffix'):
+    try:
+        app.add_source_parser('.md', M2RParser)  # for older sphinx versions
+    except TypeError:
         app.add_source_suffix('.md', 'markdown')
         app.add_source_parser(M2RParser)
-    else:
-        app.add_source_parser('.md', M2RParser)
     app.add_directive('mdinclude', MdInclude)
     metadata = dict(
         version=__version__,
