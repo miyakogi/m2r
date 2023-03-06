@@ -50,17 +50,17 @@ def parse_options():
 
 class RestBlockGrammar(mistune.BlockGrammar):
     directive = re.compile(
-            r'^( *\.\..*?)\n(?=\S)',
-            re.DOTALL | re.MULTILINE,
-        )
+        r'^( *\.\..*?)\n(?=\S)',
+        re.DOTALL | re.MULTILINE,
+    )
     oneline_directive = re.compile(
-            r'^( *\.\..*?)$',
-            re.DOTALL | re.MULTILINE,
-        )
+        r'^( *\.\..*?)$',
+        re.DOTALL | re.MULTILINE,
+    )
     rest_code_block = re.compile(
-            r'^::\s*$',
-            re.DOTALL | re.MULTILINE,
-        )
+        r'^::\s*$',
+        re.DOTALL | re.MULTILINE,
+    )
 
 
 class RestBlockLexer(mistune.BlockLexer):
@@ -475,6 +475,7 @@ class RestRenderer(mistune.Renderer):
             return ''
 
     """Below outputs are for rst."""
+
     def image_link(self, url, target, alt):
         return '\n'.join([
             '',
@@ -567,6 +568,9 @@ class MdInclude(rst.Directive):
     option_spec = {
         'start-line': int,
         'end-line': int,
+        'lines': str,
+        'start-after': str,
+        'end-before': str,
     }
 
     def run(self):
@@ -606,18 +610,54 @@ class MdInclude(rst.Directive):
             raise self.severe('Problems with "%s" directive path:\n%s.' %
                               (self.name, io.error_string(error)))
 
-        # read from the file
-        startline = self.options.get('start-line', None)
-        endline = self.options.get('end-line', None)
+        # get all of the lines and reduce as needed
         try:
-            if startline or (endline is not None):
-                lines = include_file.readlines()
-                rawtext = ''.join(lines[startline:endline])
-            else:
-                rawtext = include_file.read()
+            lines = include_file.readlines()
+            line_count = len(lines)
         except UnicodeError as error:
             raise self.severe('Problem with "%s" directive:\n%s' %
                               (self.name, io.error_string(error)))
+
+        # read from the file
+        start_line = self.options.get('start-line', 1) - 1
+        end_line = self.options.get('end-line', line_count)
+        line_ranges = self.options.get('lines', None)
+        start_marker = self.options.get('start-after', None)
+        end_marker = self.options.get('end-before', None)
+
+        if start_marker:
+            for i, line in enumerate(lines[start_line:end_line], start_line):
+                if start_marker in line:
+                    if i > start_line:
+                        start_line = i
+                    break
+            if i == len(lines):
+                start_line = i
+
+        if end_marker:
+            for i, line in enumerate(lines[start_line:end_line], start_line):
+                if end_marker in line:
+                    if i < end_line:
+                        end_line = i
+                    break
+
+        keep = set(range(start_line, end_line))
+
+        if line_ranges:
+            keep_line_ranges = set()
+            line_range_list = line_ranges.split(',')
+            for line_range in line_range_list:
+                endpoints = [int(number) if len(number) else len(lines)
+                             for number in line_range.split('-', 1)]
+                if len(endpoints) > 1:
+                    keep_line_ranges.update(
+                        set(range(endpoints[0]-1, endpoints[1])))
+                else:
+                    keep_line_ranges.add(endpoints[0]-1)
+            keep = keep.intersection(keep_line_ranges)
+
+        lines = [lines[i] for i in sorted(keep)]
+        rawtext = ''.join(lines)
 
         config = self.state.document.settings.env.config
         converter = M2R(
